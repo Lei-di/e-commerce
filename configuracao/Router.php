@@ -3,12 +3,13 @@
 require_once 'controllers/LoginController.php';
 require_once 'controllers/CarrinhoController.php';
 require_once 'controllers/ProdutoController.php';
+require_once 'controllers/UsuarioController.php';
 
 class Router {
     public function handleRequest($path) {
         switch (true) {
             case $path === '/':
-                // Rota para a página inicial (pode ser a página de login por enquanto)
+                // Rota para a página inicial - página de login por enquanto
                 (new LoginController())->index();
                 break;
 
@@ -37,18 +38,23 @@ class Router {
                 (new CarrinhoController())->finalizar();
                 break;
 
-            // 🔹 Nova rota: listar todos os produtos
+            //rota listar todos os produtos
             case $path === '/api/produtos':
                 (new ProdutoController())->listarTodos();
                 break;
 
-            // 🔹 Nova rota: buscar produto por ID (/api/produtos/{id})
+            //rota buscar produto por ID (/api/produtos/{id})
             case preg_match('/^\/api\/produtos\/(\d+)$/', $path, $matches):
                 (new ProdutoController())->buscarPorId($matches[1]);
                 break;
+            
+            //rota para cadastro de usuário
+            case $path === '/api/usuario/cadastrar':
+                (new UsuarioController())->registrar();
+                break;
 
             default:
-                // Rota padrão para páginas não encontradas
+                //rota padrão para páginas não encontradas
                 http_response_code(404);
                 echo "Página não encontrada!";
                 break;
