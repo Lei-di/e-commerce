@@ -1,9 +1,9 @@
 <?php
 
-require_once 'controllers/LoginController.php';
-require_once 'controllers/CarrinhoController.php';
-require_once 'controllers/ProdutoController.php';
-require_once 'controllers/UsuarioController.php';
+require_once '../controllers/LoginController.php';
+require_once '../controllers/CarrinhoController.php';
+require_once '../controllers/ProdutoController.php';
+require_once '../controllers/UsuarioController.php';
 
 class Router {
     public function handleRequest($path) {

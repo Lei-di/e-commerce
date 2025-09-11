@@ -1,7 +1,7 @@
 <?php
-require_once 'configuracao/Controller.php';
-require_once 'models/Carrinho.php';
-require_once 'models/Pedido.php';
+require_once '../configuracao/Controller.php';
+require_once '../models/Carrinho.php';
+require_once '../models/Pedido.php';
 
 class CarrinhoController extends Controller {
 

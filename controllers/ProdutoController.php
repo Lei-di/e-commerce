@@ -1,6 +1,6 @@
 <?php
-require_once 'models/Produto.php';
-require_once 'configuracao/Controller.php';
+require_once '../models/Produto.php';
+require_once '../configuracao/Controller.php';
 
 class ProdutoController extends Controller{
     public function listarTodos() {

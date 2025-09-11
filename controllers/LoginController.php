@@ -1,6 +1,6 @@
 <?php
-require_once 'configuracao/Controller.php';
-require_once 'models/Usuario.php';
+require_once '../configuracao/Controller.php';
+require_once '../models/Usuario.php';
 
 class LoginController extends Controller {
     public function index() {

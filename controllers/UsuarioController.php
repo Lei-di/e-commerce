@@ -1,6 +1,6 @@
 <?php
-require_once 'models/Usuario.php';
-require_once 'configuracao/Controller.php';
+require_once '../models/Usuario.php';
+require_once '../configuracao/Controller.php';
 
 class UsuarioController extends Controller {
     public function registrar() {
