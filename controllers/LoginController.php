@@ -1,5 +1,6 @@
 <?php
 require_once 'configuracao/Controller.php';
+require_once 'models/Usuario.php';
 
 class LoginController extends Controller {
     public function index() {
@@ -8,7 +9,30 @@ class LoginController extends Controller {
     }
 
     public function login() {
-        // Só uma resposta fake
-        $this->jsonResponse(["mensagem" => "Função de login ainda não implementada"]);
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        $data = json_decode(file_get_contents("php://input"), true);
+
+        if (!isset($data['email'], $data['senha'])) {
+            $this->jsonError("Email e senha são obrigatórios", 400);
+        }
+
+        $usuario = Usuario::validarLogin($data['email'], $data['senha']);
+
+        if ($usuario) {
+            $_SESSION['usuario_id'] = $usuario['id'];
+            $this->jsonResponse([
+                "mensagem" => "Login bem-sucedido!",
+                "usuario" => [
+                    "id" => $usuario['id'],
+                    "nome" => $usuario['nome'],
+                    "email" => $usuario['email']
+                ]
+            ]);
+        } else {
+            $this->jsonError("Usuário ou senha inválidos", 401);
+        }
     }
 }

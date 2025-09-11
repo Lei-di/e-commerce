@@ -13,7 +13,7 @@ class Router {
                 (new LoginController())->index();
                 break;
 
-            case $path === '/login':
+            case $path === '/api/login':
                 // Rota para o processamento do login
                 (new LoginController())->login();
                 break;

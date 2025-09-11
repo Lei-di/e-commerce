@@ -36,4 +36,18 @@ class Usuario {
         self::$usuarios[] = $novoUsuario;
         return $novoUsuario;
     }
+
+    /**
+     * Valida o login de um usuário.
+     * @param string $email
+     * @param string $senha
+     * @return array|false Retorna os dados do usuário em caso de sucesso ou false em caso de falha.
+     */
+    public static function validarLogin($email, $senha) {
+        $usuario = self::getByEmail($email);
+        if ($usuario && $usuario['senha'] === $senha) {
+            return $usuario;
+        }
+        return false;
+    }
 }
