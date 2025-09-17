@@ -1,0 +1,132 @@
+.body {
+    padding: 0;
+    margin: 0;
+}
+
+.cabecalho {
+    padding: 0 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* distribui os elementos */
+    width: 100%; /* ocupa toda a largura da tela */
+    height: 100px;
+    background-color: rgb(255, 255, 255);
+}
+
+.cabecalho .logo a {
+    font-size: 20px;
+    font-weight: bold;
+    text-decoration: none;
+    color: black;
+}
+
+.cabecalho ul {
+    display: flex;
+    list-style-type: none;
+    gap: 40px; /* espaçamento entre os itens */
+    margin: 0;
+    padding: 0;
+}
+
+.cabecalho ul li h4 {
+    margin: 0;
+    cursor: pointer;
+}
+
+.cabecalho .pesquisa {
+    display: flex;
+    align-items: center;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px 5px;
+    width: 250px;
+}
+
+.cabecalho .pesquisa img {
+    width: 20px;
+    margin-right: 8px;
+}
+
+.cabecalho .pesquisa input {
+    border: none;
+    outline: none;
+    width: 100%;
+    font-size: 14px;
+}
+
+.cabecalho .area-dados {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* espaçamento entre ícones */
+}
+
+#usuario {
+    width: 40px;
+}
+
+#carrinho {
+    margin-right: 60px;
+    width: 23px;
+}
+
+/*propaganda*/
+
+.propaganda{
+    width: 100%;
+    height: 600px;
+    overflow: hidden;
+
+}
+
+.propaganda img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.conteudo-propaganda{
+    position: relative;
+    width: 100%;
+
+}
+
+.propaganda::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.4); /* filtro branco */
+}
+
+.propaganda .conteudo-propaganda {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: #000;
+    z-index: 1; /* sobre o overlay */
+}
+
+.propaganda .conteudo-propaganda h1 {
+   font-size: 60px;
+   margin-bottom: 2px;
+}
+.propaganda .conteudo-propaganda button{
+    font-size: 20px;
+    padding: 10px;
+    background-color: #FF8000;
+    color: rgb(0, 0, 0);
+    border: 2px solid #FF8000;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.propaganda .conteudo-propaganda button:hover{
+    background-color: white;
+    border: 2px solid #FF8000;
+}
