@@ -1,6 +1,6 @@
 <?php
-require_once '../models/Produto.php';
-require_once '../configuracao/Controller.php';
+require_once __DIR__ . '/Controller.php'; // Aponta para o controller base na mesma pasta
+require_once __DIR__ . '/../models/Produto.php'; // Sobe um nível e entra em models
 
 class ProdutoController extends Controller{
     public function listarTodos() {

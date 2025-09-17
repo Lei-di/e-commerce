@@ -1,6 +1,6 @@
 <?php
-require_once '../models/Usuario.php';
-require_once '../configuracao/Controller.php';
+require_once __DIR__ . '/Controller.php';
+require_once __DIR__ . '/../models/Usuario.php';
 
 class UsuarioController extends Controller {
     public function registrar() {

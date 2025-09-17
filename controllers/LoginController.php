@@ -1,6 +1,6 @@
 <?php
-require_once '../configuracao/Controller.php';
-require_once '../models/Usuario.php';
+require_once __DIR__ . '/Controller.php';
+require_once __DIR__ . '/../models/Usuario.php';
 
 class LoginController extends Controller {
     public function index() {
@@ -23,7 +23,7 @@ class LoginController extends Controller {
 
         if ($usuario) {
             $_SESSION['usuario_id'] = $usuario['id'];
-            $this->jsonResponse([
+            $this.jsonResponse([
                 "mensagem" => "Login bem-sucedido!",
                 "usuario" => [
                     "id" => $usuario['id'],

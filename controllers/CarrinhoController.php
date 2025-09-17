@@ -1,7 +1,7 @@
 <?php
-require_once '../configuracao/Controller.php';
-require_once '../models/Carrinho.php';
-require_once '../models/Pedido.php';
+require_once __DIR__ . '/Controller.php';
+require_once __DIR__ . '/../models/Carrinho.php';
+require_once __DIR__ . '/../models/Pedido.php';
 
 class CarrinhoController extends Controller {
 
@@ -14,9 +14,9 @@ class CarrinhoController extends Controller {
 
         if ($produtoId) {
             $carrinho->adicionarItem($produtoId, $quantidade);
-            $this->response(['status' => 'success', 'message' => 'Item adicionado ao carrinho.'], 200);
+            $this->jsonResponse(['status' => 'success', 'message' => 'Item adicionado ao carrinho.'], 200);
         } else {
-            $this->response(['status' => 'error', 'message' => 'Produto não especificado.'], 400);
+            $this->jsonError('Produto não especificado.', 400);
         }
     }
 
@@ -26,16 +26,16 @@ class CarrinhoController extends Controller {
         $produtoId = $data['produto_id'] ?? null;
 
         if ($produtoId && $carrinho->removerItem($produtoId)) {
-            $this->response(['status' => 'success', 'message' => 'Item removido do carrinho.'], 200);
+            $this->jsonResponse(['status' => 'success', 'message' => 'Item removido do carrinho.'], 200);
         } else {
-            $this->response(['status' => 'error', 'message' => 'Item não encontrado no carrinho.'], 404);
+            $this->jsonError('Item não encontrado no carrinho.', 404);
         }
     }
 
     public function ver() {
         $carrinho = new Carrinho();
         $itens = $carrinho->getItens();
-        $this->response($itens, 200);
+        $this->jsonResponse($itens, 200);
     }
 
     public function finalizar() {
@@ -49,6 +49,6 @@ class CarrinhoController extends Controller {
             $carrinho->esvaziarCarrinho(); // Esvaziar o carrinho após a compra
         }
 
-        $this->response($resultado, 200);
+        $this->jsonResponse($resultado, 200);
     }
 }
