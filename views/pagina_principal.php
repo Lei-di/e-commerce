@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Elegancia Store</title>
-    <link rel="stylesheet" href="/css/pagina_principal.css">
-    <link rel="stylesheet" href="/css/global/cabecalho.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/css/pagina_principal.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/css/global/cabecalho.css">
 </head>
 <body>
     <?php include __DIR__ . '/components/cabecalho.php'; ?>
 
     <section class="propaganda">
-        <img src="/assets/imagens/propaganda.jpg" alt="Propaganda de nova coleção">
+        <img src="<?= BASE_URL ?>/assets/imagens/propaganda.jpg" alt="Propaganda de nova coleção">
         <div class="conteudo-propaganda">
             <h1>NOVA COLEÇÃO</h1>
             <h3>Descubra as últimas tendências da moda feminina</h3>
@@ -19,17 +19,9 @@
         </div>
     </section>
 
-    <section class="menu">
-        <a class="selecao" href="">Todos</a>
-        <a href="">Vestidos</a>
-        <a href="">Blusas</a>
-        <a href="">Calças</a>
-        <a href="">Blazers</a>
-    </section>
-
     <main>
         <div class="filtro">
-            <h3>Filtros</h3>
+             <h3>Filtros</h3>
 
             <h4 class="categoria">Categoria</h4>
             <div class="opcoes">
@@ -66,7 +58,6 @@
                 <label><input type="checkbox" name="cor" value="Verde"> Verde</label>
             </article>
         </div>
-
        <div class="area-produto">
             <h1>Todos</h1>
             <div class="lista-produtos">
@@ -74,6 +65,10 @@
         </div>
     </main>
 
-    <script src="/js/main.js"></script>
+    <script>
+        // Passa a URL base do PHP para o JavaScript
+        const baseURL = "<?= BASE_URL ?>";
+    </script>
+    <script src="<?= BASE_URL ?>/js/main.js"></script>
 </body>
 </html>
