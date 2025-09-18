@@ -38,4 +38,37 @@ class Produto {
         }
         return null;
     }
+
+    /**
+     * Deleta um produto pelo ID.
+     * @param int $id
+     * @return bool Retorna true se o produto foi deletado, false caso contrário.
+     */
+    public static function deletar($id) {
+        foreach (self::$produtos as $key => $produto) {
+            if ($produto['id'] == $id) {
+                unset(self::$produtos[$key]);
+                // Reindexar o array para manter a consistência
+                self::$produtos = array_values(self::$produtos);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Busca produtos por um termo no nome.
+     * @param string $termo
+     * @return array Retorna um array de produtos que correspondem ao termo.
+     */
+    public static function buscarPorNome($termo) {
+        $resultados = [];
+        foreach (self::$produtos as $produto) {
+            // stristr é case-insensitive (não diferencia maiúsculas de minúsculas)
+            if (stristr($produto['nome'], $termo)) {
+                $resultados[] = $produto;
+            }
+        }
+        return $resultados;
+    }
 }
