@@ -1,49 +1,14 @@
-<?php include 'components/cabecalho.php'; ?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meu Perfil</title>
-    <link rel="stylesheet" href="css/perfil.css">
-    <link rel="stylesheet" href="css/global/cabecalho.css">
+    <link rel="stylesheet" href="/css/perfil.css">
+    <link rel="stylesheet" href="/css/global/cabecalho.css">
 </head>
 <body>
-    <section class="cabecalho">
-        <div class="logo">
-            <a href="pagina_principal.html">ELEGANCIA</a>
-        </div>
-        <ul>
-            <li>
-                <h4>Novidades</h4>
-            </li>
-
-            <li>
-                <h4>Feminino</h4>
-            </li>
-
-            <li>
-                <h4>Masculino</h4>
-            </li>
-
-            <li>
-                <h4>Acessórios</h4>
-            </li>
-        </ul>
-
-        <div class="pesquisa">
-            <img src="../assets/icones/lupa.png" alt="">
-
-            <form action="">
-                <input type="text" placeholder="Buscar produtos...">
-            </form>
-        </div>
-
-        <div class="area-dados">
-            <a href="perfil.html"><img id="usuario" src="../assets/icones/perfil.png" alt=""></a>
-            <img id="carrinho" src="../assets/icones/carrinho.png" alt="">
-        </div>
-    </section>
+    <?php include __DIR__ . '/components/cabecalho.php'; ?>
 
     <main class="profile-main-content">
         <div class="profile-sidebar-wrapper">
@@ -61,8 +26,7 @@
             <div class="wishlist-section">
                 <h2>LISTA DE DESEJOS</h2>
                 <div class="wishlist-grid-sidebar">
-                    <!-- Placeholders para a lista de desejos na sidebar -->
-                </div>
+                    </div>
                 <a href="#" class="mais-link">+ MAIS</a>
             </div>
         </div>
@@ -87,7 +51,6 @@
         </section>
     </main>
 
-    <script src="../js/perfil.js"></script>
+    <script src="/js/perfil.js"></script>
 </body>
 </html>
-
