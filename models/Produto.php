@@ -8,7 +8,7 @@ class Produto {
             "nome" => "Vestido Longo Elegance",
             "preco" => 199.90,
             "estoque" => 12,
-            "imagem" => "vestido_longo.jpg"
+            "imagem" => "vestido.jpg"
         ],
         [
             "id" => 2,
