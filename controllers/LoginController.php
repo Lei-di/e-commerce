@@ -23,7 +23,7 @@ class LoginController extends Controller {
 
         if ($usuario) {
             $_SESSION['usuario_id'] = $usuario['id'];
-            $this.jsonResponse([
+            $this->jsonResponse([
                 "mensagem" => "Login bem-sucedido!",
                 "usuario" => [
                     "id" => $usuario['id'],
