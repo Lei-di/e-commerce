@@ -16,4 +16,17 @@ class ProdutoController extends Controller{
             $this->jsonError("Produto não encontrado", 404);
         }
     }
+
+    public function deletarProduto($id) {
+        if (Produto::deletar($id)) {
+            $this->jsonResponse(["mensagem" => "Produto deletado com sucesso"]);
+        } else {
+            $this->jsonError("Produto não encontrado para deletar", 404);
+        }
+    }
+
+    public function buscarProdutos($termo) {
+        $produtos = Produto::buscarPorNome($termo);
+        $this->jsonResponse($produtos);
+    }
 }
