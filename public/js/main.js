@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const listaProdutos = document.querySelector('.lista-produtos');
 
-    // Usa a baseURL (definida no HTML) para montar o endereço correto da API
+    // Usa a baseURL (definida no HTML da pagina_principal.php) para montar os endereços corretos
     fetch(`${baseURL}/api/produtos`)
         .then(response => {
             if (!response.ok) {

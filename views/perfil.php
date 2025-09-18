@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meu Perfil</title>
-    <link rel="stylesheet" href="/css/perfil.css">
-    <link rel="stylesheet" href="/css/global/cabecalho.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/css/perfil.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/css/global/cabecalho.css">
 </head>
 <body>
     <?php include __DIR__ . '/components/cabecalho.php'; ?>
@@ -51,6 +51,6 @@
         </section>
     </main>
 
-    <script src="/js/perfil.js"></script>
+    <script src="<?= BASE_URL ?>/js/perfil.js"></script>
 </body>
 </html>
