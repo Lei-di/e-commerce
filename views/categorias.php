@@ -5,15 +5,13 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Categorias — Minha Loja</title>
 
-  <!-- se o document root do servidor é a pasta /public, use este caminho: -->
+  <!-- Se o document root do servidor é /public, este caminho funciona -->
   <link rel="stylesheet" href="/css/categorias.css">
-
-  <!-- se o seu servidor NÃO aponta pra /public, troque para: /public/css/categorias.css -->
+  <!-- Se NÃO for /public, troque para /public/css/categorias.css -->
   <!-- <link rel="stylesheet" href="/public/css/categorias.css"> -->
 </head>
 <body>
 
-  <!-- Se você já tem um cabeçalho pronto, pode incluir aqui. Ex: -->
   <?php if (file_exists(__DIR__.'/components/cabecalho.php')) require __DIR__.'/components/cabecalho.php'; ?>
 
   <section class="area-categorias">
@@ -26,15 +24,18 @@
   </section>
 
   <main class="categorias">
-    <!-- filtro lateral (opcional; pode ocultar por enquanto) -->
+    <!-- filtro lateral (opcional) -->
     <aside class="filtro">
       <h2>Filtros</h2>
+
       <h4>Preço</h4>
       <div class="preco">
-        <input type="number" id="preco-min" placeholder="min" min="0" step="10"><span>-</span>
+        <input type="number" id="preco-min" placeholder="min" min="0" step="10">
+        <span>-</span>
         <input type="number" id="preco-max" placeholder="máx" min="0" step="10">
-        <button id="aplicar" style="height:30px;padding:0 10px;">Aplicar</button>
+        <button id="aplicar" style="height:30px; padding:0 10px;">Aplicar</button>
       </div>
+
       <h4 style="margin-top:16px;">Tamanho</h4>
       <div class="tamanho" id="tamanhos">
         <label><input type="checkbox" value="PP"> PP</label>
@@ -43,7 +44,8 @@
         <label><input type="checkbox" value="G">  G</label>
         <label><input type="checkbox" value="GG"> GG</label>
       </div>
-      <button id="limpar" style="margin-top:16px;width:100%;">Limpar filtros</button>
+
+      <button id="limpar" style="margin-top:16px; width:100%;">Limpar filtros</button>
     </aside>
 
     <!-- área da lista -->
@@ -63,17 +65,16 @@
       </div>
 
       <div id="state-vazio" class="state">Nenhum produto encontrado.</div>
-      <div id="state-erro"  class="state" style="color:#b00">Falha ao carregar produtos.</div>
+      <div id="state-erro" class="state" style="color:#b00">Falha ao carregar produtos.</div>
 
       <div class="lista-produtos" id="lista"></div>
       <div class="paginacao" id="paginacao"></div>
     </section>
   </main>
 
-  <!-- JS da página -->
+  <!-- JS da página de categorias -->
   <script src="/js/categorias.js"></script>
-  <!-- se o root não for /public, troque para /public/js/categorias.js -->
+  <!-- Se o document root NÃO for /public, troque para: -->
   <!-- <script src="/public/js/categorias.js"></script> -->
 </body>
 </html>
-
