@@ -1,42 +1,51 @@
 <?php
-//require_once 'configuracao/Model.php';
-
+require_once __DIR__ . '/../config/configBanco.php';
 class Produto {
-    private static $produtos = [
-        [
-            "id" => 1,
-            "nome" => "Vestido Longo Elegance",
-            "preco" => 199.90,
-            "estoque" => 12,
-            "imagem" => "vestido.jpg"
-        ],
-        [
-            "id" => 2,
-            "nome" => "Camisa Social Masculina",
-            "preco" => 129.90,
-            "estoque" => 20,
-            "imagem" => "camisa_social.jpg"
-        ],
-        [
-            "id" => 3,
-            "nome" => "Calça Jeans Feminina",
-            "preco" => 149.90,
-            "estoque" => 15,
-            "imagem" => "calca_jeans.jpg"
-        ]
-    ];
+        public static function getAll() {
+        global $conn;
+         $sql = "SELECT 
+                    p.id_produto,
+                    p.nome AS produto,
+                    c.nome AS categoria,
+                    p.preco,
+                    e.quantidade AS estoque
+                FROM produtos p
+                JOIN categorias c ON p.id_categoria = c.id_categoria
+                JOIN estoque e ON p.id_produto = e.id_produto
+                ORDER BY p.nome";
 
-    public static function getAll() {
-        return self::$produtos;
+        try {
+            $stmt = $conn->prepare($sql);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC); // retorna array 
+        } catch (PDOException $e) {
+            die("Erro ao buscar produtos: " . $e->getMessage());
+        }
     }
 
     public static function getById($id) {
-        foreach (self::$produtos as $produto) {
-            if ($produto["id"] == $id) {
-                return $produto;
-            }
+        global $conn;
+
+        $sql = "SELECT 
+                    p.id_produto,
+                    p.nome AS produto,
+                    c.nome AS categoria,
+                    p.preco,
+                    e.quantidade AS estoque
+                FROM produtos p
+                JOIN categorias c ON p.id_categoria = c.id_categoria
+                JOIN estoque e ON p.id_produto = e.id_produto
+                WHERE p.id_produto = :id
+                LIMIT 1";
+
+        try {
+            $stmt = $conn->prepare($sql);
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            $stmt->execute();
+            return $stmt->fetch(PDO::FETCH_ASSOC); // retorna apenas 1 registro
+        } catch (PDOException $e) {
+            die("Erro ao buscar produto: " . $e->getMessage());
         }
-        return null;
     }
 
     /**

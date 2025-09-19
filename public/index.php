@@ -4,7 +4,7 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-// Define a URL base do projeto para ser usada nas views
+// Define a URL base do projeto para ser usada nas views -> /e-commerce/public
 define('BASE_URL', '/e-commerce/public');
 
 // Inclui o Router da pasta correta
