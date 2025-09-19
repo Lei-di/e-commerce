@@ -49,6 +49,14 @@ class Router {
                 (new ProdutoController())->listarTodos();
                 break;
 
+            case $method === 'POST' && $path === '/api/produtos/criar':
+                (new ProdutoController())->criarProduto();
+                break;
+
+            case $method === 'PUT' && preg_match('/^\/api\/produtos\/atualizar\/(\d+)$/', $path, $matches):
+                (new ProdutoController())->atualizarProduto($matches[1]);
+                break;
+            
             case preg_match('/^\/api\/produtos\/(\d+)$/', $path, $matches):
                 (new ProdutoController())->buscarPorId($matches[1]);
                 break;
