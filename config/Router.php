@@ -3,6 +3,7 @@
 require_once __DIR__ . '/../controllers/web/HomeController.php';
 require_once __DIR__ . '/../controllers/web/PerfilController.php';
 
+
 // Controllers que respondem à API (JSON)
 require_once __DIR__ . '/../controllers/LoginController.php';
 require_once __DIR__ . '/../controllers/CarrinhoController.php';
@@ -22,6 +23,10 @@ class Router {
 
             case $path === '/perfil':
                 (new PerfilController())->index();
+                break;
+            
+            case $path === '/categorias' || $path === '/categorias/':
+                (new HomeController())->categorias();  
                 break;
 
             // --- Rotas da API (retornam JSON) ---
