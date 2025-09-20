@@ -5,26 +5,21 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Categorias — Minha Loja</title>
 
-  <!-- Se o document root do servidor é /public, este caminho funciona -->
-  <link rel="stylesheet" href="/css/categorias.css">
-  <!-- Se NÃO for /public, troque para /public/css/categorias.css -->
-  <!-- <link rel="stylesheet" href="/public/css/categorias.css"> -->
+  <link rel="stylesheet" href="<?= BASE_URL ?>/css/categorias.css">
 </head>
 <body>
 
   <?php if (file_exists(__DIR__.'/components/cabecalho.php')) require __DIR__.'/components/cabecalho.php'; ?>
 
   <section class="area-categorias">
-    <!-- menu das 3 categorias -->
     <nav class="menu" id="menu-categorias">
-      <a href="/categorias?categoria=feminino"  data-cat="feminino">Feminino</a>
-      <a href="/categorias?categoria=masculino" data-cat="masculino">Masculino</a>
-      <a href="/categorias?categoria=acessorios" data-cat="acessorios">Acessórios</a>
+      <a href="<?= BASE_URL ?>/categorias?categoria=feminino"  data-cat="feminino">Feminino</a>
+      <a href="<?= BASE_URL ?>/categorias?categoria=masculino" data-cat="masculino">Masculino</a>
+      <a href="<?= BASE_URL ?>/categorias?categoria=acessorios" data-cat="acessorios">Acessórios</a>
     </nav>
   </section>
 
   <main class="categorias">
-    <!-- filtro lateral (opcional) -->
     <aside class="filtro">
       <h2>Filtros</h2>
 
@@ -48,7 +43,6 @@
       <button id="limpar" style="margin-top:16px; width:100%;">Limpar filtros</button>
     </aside>
 
-    <!-- área da lista -->
     <section class="area-produto">
       <div class="topo-lista">
         <h1 id="titulo">Categoria</h1>
@@ -72,9 +66,6 @@
     </section>
   </main>
 
-  <!-- JS da página de categorias -->
-  <script src="/js/categorias.js"></script>
-  <!-- Se o document root NÃO for /public, troque para: -->
-  <!-- <script src="/public/js/categorias.js"></script> -->
+  <script src="<?= BASE_URL ?>/js/categorias.js"></script>
 </body>
 </html>
