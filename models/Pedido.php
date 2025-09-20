@@ -9,7 +9,7 @@ class Pedido {
         }
 
         // Simular a criação do pedido (em um cenário real, salvaria no BD)
-        $pedidoId = rand(1000, 8100); // ID de pedido aleatório
+        $pedidoId = rand(1000, 9999); // ID de pedido aleatório
 
         // Retorna um objeto de pedido simulado
         return [
