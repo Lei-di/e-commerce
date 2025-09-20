@@ -15,7 +15,8 @@
         <div class="conteudo-propaganda">
             <h1>NOVA COLEÇÃO</h1>
             <h3>Descubra as últimas tendências da moda feminina</h3>
-            <button>Explorar Coleção</button>
+<a class="botao-colecao" href="<?= BASE_URL ?>/categorias?categoria=feminino">Explorar Coleção</a>
+
         </div>
     </section>
 
