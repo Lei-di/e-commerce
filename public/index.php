@@ -1,31 +1,47 @@
 <?php
-// Habilitar exibição de erros (opcional durante desenvolvimento)
+// Habilitar exibição de erros
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-// Define a URL base do projeto para ser usada nas views
-define('BASE_URL', '/e-commerce/e-commerce-main/public');
+// --- INÍCIO DO CÓDIGO DE DEPURAÇÃO ---
 
-// Inclui o Router da pasta correta
-require_once __DIR__ . '/../config/Router.php';
+// 1. Pega o path da URL acessada
+$uri_completa = $_SERVER['REQUEST_URI'];
+$uri_processada = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
-// Pega o path da URL acessada
-$uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-
-// Remove o basePath se o projeto não estiver na raiz do servidor
+// 2. Define o caminho base do projeto
 $basePath = '/e-commerce/e-commerce-main/public';
-if (strpos($uri, $basePath) === 0) {
-    $uri = substr($uri, strlen($basePath));
+
+// 3. Mostra os valores antes do processamento
+echo "<h1>Diagnóstico de Roteamento</h1>";
+echo "<p><strong>URL Completa Recebida pelo Servidor (REQUEST_URI):</strong></p>";
+echo "<pre style='background-color:#f0f0f0; padding:10px; border:1px solid #ccc;'>" . htmlspecialchars($uri_completa) . "</pre>";
+
+echo "<p><strong>Caminho Extraído (parse_url):</strong></p>";
+echo "<pre style='background-color:#f0f0f0; padding:10px; border:1px solid #ccc;'>" . htmlspecialchars($uri_processada) . "</pre>";
+
+echo "<p><strong>Caminho Base Definido no Código (basePath):</strong></p>";
+echo "<pre style='background-color:#f0f0f0; padding:10px; border:1px solid #ccc;'>" . htmlspecialchars($basePath) . "</pre>";
+echo "<hr>";
+
+// 4. Lógica de processamento
+$uri_final = $uri_processada;
+if (strpos($uri_final, $basePath) === 0) {
+    $uri_final = substr($uri_final, strlen($basePath));
+}
+if (empty($uri_final)) {
+    $uri_final = '/';
 }
 
-// --- ALTERAÇÃO IMPORTANTE ---
-// Garante que a URI nunca seja vazia. Se for, define como a rota raiz '/'.
-// Isso corrige o erro "Página não encontrada" na página inicial.
-if (empty($uri)) {
-    $uri = '/';
-}
+// 5. Mostra o valor final que seria enviado ao router
+echo "<h1>Resultado Final</h1>";
+echo "<p><strong>Caminho final que seria enviado ao Router:</strong></p>";
+echo "<pre style='background-color:#e6ffed; padding:10px; border:1px solid #58a65c;'>";
+var_dump($uri_final);
+echo "</pre>";
 
-// Instancia o Router e delega a requisição
-$router = new Router();
-$router->handleRequest($uri);
+// 6. Para a execução para podermos ver o resultado
+exit;
+
+// --- FIM DO CÓDIGO DE DEPURAÇÃO ---
