@@ -15,10 +15,17 @@
         <div class="conteudo-propaganda">
             <h1>NOVA COLEÇÃO</h1>
             <h3>Descubra as últimas tendências da moda feminina</h3>
-<a class="botao-colecao" href="<?= BASE_URL ?>/categorias?categoria=feminino">Explorar Coleção</a>
-
+            <!-- transforma em link p/ Feminino -->
+            <a class="botao-colecao" href="<?= BASE_URL ?>/categorias?categoria=feminino">Explorar Coleção</a>
         </div>
     </section>
+
+    <!-- Barra simples com os 3 links de categoria -->
+    <nav class="menu" aria-label="Categorias" style="display:flex;justify-content:center;gap:40px;border-bottom:1px solid #ddd;margin:20px 0;padding-bottom:10px;">
+      <a href="<?= BASE_URL ?>/categorias?categoria=feminino">Feminino</a>
+      <a href="<?= BASE_URL ?>/categorias?categoria=masculino">Masculino</a>
+      <a href="<?= BASE_URL ?>/categorias?categoria=acessorios">Acessórios</a>
+    </nav>
 
     <main>
         <div class="filtro">
@@ -59,17 +66,25 @@
                 <label><input type="checkbox" name="cor" value="Verde"> Verde</label>
             </article>
         </div>
-       <div class="area-produto">
+
+        <div class="area-produto">
             <h1>Todos</h1>
-            <div class="lista-produtos">
-                </div>
+            <div class="lista-produtos"></div>
         </div>
     </main>
 
     <script>
-        // Passa a URL base do PHP para o JavaScript
-        const baseURL = "<?= BASE_URL ?>";
+      const baseURL = "<?= BASE_URL ?>";
     </script>
     <script src="<?= BASE_URL ?>/js/main.js"></script>
+
+    <!-- CSSzinho do botão (opcional) -->
+    <style>
+      .botao-colecao{
+        display:inline-block;background:orange;color:#fff;text-decoration:none;
+        padding:12px 25px;border-radius:5px;font-size:1rem;transition:background .3s
+      }
+      .botao-colecao:hover{background:darkorange}
+    </style>
 </body>
 </html>
