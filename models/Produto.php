@@ -1,11 +1,14 @@
 <?php
 require_once __DIR__ . '/../config/configBanco.php';
 class Produto {
-        public static function getAll() {
+    public static function getAll() {
         global $conn;
-         $sql = "SELECT 
+        // ATUALIZADO: A consulta agora seleciona a coluna 'imagem' 
+        // e renomeia 'p.nome' para 'nome' para corresponder ao JavaScript.
+        $sql = "SELECT 
                     p.id_produto,
-                    p.nome AS produto,
+                    p.nome AS nome,
+                    p.imagem,
                     c.nome AS categoria,
                     p.preco,
                     e.quantidade AS estoque
@@ -19,6 +22,7 @@ class Produto {
             $stmt->execute();
             return $stmt->fetchAll(PDO::FETCH_ASSOC); // retorna array 
         } catch (PDOException $e) {
+            // Em caso de erro, retorna uma string que será tratada como erro no JS
             die("Erro ao buscar produtos: " . $e->getMessage());
         }
     }
