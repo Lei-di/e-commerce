@@ -3,18 +3,8 @@ require_once __DIR__ . '/Controller.php'; // Aponta para o controller base na me
 require_once __DIR__ . '/../models/Produto.php'; // Sobe um nível e entra em models
 
 class ProdutoController extends Controller{
-    
-    // MÉTODO ATUALIZADO
     public function listarTodos() {
-        // Verifica se o parâmetro 'categoria' foi passado na URL via GET
-        if (isset($_GET['categoria']) && !empty($_GET['categoria'])) {
-            $categoria = $_GET['categoria'];
-            $produtos = Produto::getByCategoria($categoria);
-            $this->jsonResponse($produtos);
-        } else {
-            // Se nenhuma categoria for especificada, retorna todos os produtos
-            $this->jsonResponse(Produto::getAll());
-        }
+        $this->jsonResponse(Produto::getAll());
     }
 
     public function buscarPorId($id) {
