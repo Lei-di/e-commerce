@@ -1,5 +1,5 @@
 <?php
-//require_once 'configuracao/Model.php';
+// models/Produto.php
 
 class Produto {
     private static $produtos = [
@@ -8,27 +8,50 @@ class Produto {
             "nome" => "Vestido Longo Elegance",
             "preco" => 199.90,
             "estoque" => 12,
-            "imagem" => "vestido.jpg"
+            "imagem" => "vestido.jpg",
+            "categoria" => "feminino" // ADICIONADO
         ],
         [
             "id" => 2,
             "nome" => "Camisa Social Masculina",
             "preco" => 129.90,
             "estoque" => 20,
-            "imagem" => "camisa_social.jpg"
+            "imagem" => "camisa_social.jpg",
+            "categoria" => "masculino" // ADICIONADO
         ],
         [
             "id" => 3,
             "nome" => "Calça Jeans Feminina",
             "preco" => 149.90,
             "estoque" => 15,
-            "imagem" => "calca_jeans.jpg"
+            "imagem" => "calca_jeans.jpg",
+            "categoria" => "feminino" // ADICIONADO
         ]
     ];
 
     public static function getAll() {
         return self::$produtos;
     }
+
+    /**
+     * NOVA FUNÇÃO ADICIONADA
+     * Busca produtos por categoria.
+     */
+    public static function getByCategoria($categoria) {
+        if (strtolower($categoria) === 'novidades') {
+            return self::$produtos;
+        }
+
+        $resultados = [];
+        foreach (self::$produtos as $produto) {
+            if (isset($produto['categoria']) && strtolower($produto['categoria']) === strtolower($categoria)) {
+                $resultados[] = $produto;
+            }
+        }
+        return $resultados;
+    }
+
+    // A SEGUIR, O RESTANTE DO SEU CÓDIGO ORIGINAL QUE FOI MANTIDO
 
     public static function getById($id) {
         foreach (self::$produtos as $produto) {
@@ -86,7 +109,8 @@ class Produto {
             "nome" => $dados['nome'] ?? 'Nome do Produto',
             "preco" => $dados['preco'] ?? 0.0,
             "estoque" => $dados['estoque'] ?? 0,
-            "imagem" => $dados['imagem'] ?? 'default.jpg'
+            "imagem" => $dados['imagem'] ?? 'default.jpg',
+            "categoria" => $dados['categoria'] ?? 'geral' // Adicionado para ser consistente
         ];
 
         self::$produtos[] = $novoProduto;
@@ -107,6 +131,7 @@ class Produto {
                 self::$produtos[$key]['preco'] = $dados['preco'] ?? $produto['preco'];
                 self::$produtos[$key]['estoque'] = $dados['estoque'] ?? $produto['estoque'];
                 self::$produtos[$key]['imagem'] = $dados['imagem'] ?? $produto['imagem'];
+                self::$produtos[$key]['categoria'] = $dados['categoria'] ?? $produto['categoria']; // Adicionado para ser consistente
                 
                 return self::$produtos[$key];
             }
