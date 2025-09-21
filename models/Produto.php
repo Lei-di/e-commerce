@@ -8,24 +8,21 @@ class Produto {
             "nome" => "Vestido Longo Elegance",
             "preco" => 199.90,
             "estoque" => 12,
-            "imagem" => "vestido.jpg",
-            "categoria" => "feminino" // ADICIONADO
+            "imagem" => "vestido.jpg"
         ],
         [
             "id" => 2,
             "nome" => "Camisa Social Masculina",
             "preco" => 129.90,
             "estoque" => 20,
-            "imagem" => "camisa_social.jpg",
-            "categoria" => "masculino" // ADICIONADO
+            "imagem" => "camisa_social.jpg"
         ],
         [
             "id" => 3,
             "nome" => "Calça Jeans Feminina",
             "preco" => 149.90,
             "estoque" => 15,
-            "imagem" => "calca_jeans.jpg",
-            "categoria" => "feminino" // ADICIONADO
+            "imagem" => "calca_jeans.jpg"
         ]
     ];
 
@@ -41,29 +38,6 @@ class Produto {
         }
         return null;
     }
-    
-    /**
-     * NOVA FUNÇÃO ADICIONADA
-     * Busca produtos por categoria.
-     * @param string $categoria
-     * @return array Retorna um array de produtos da categoria especificada.
-     */
-    public static function getByCategoria($categoria) {
-        // Se a categoria for 'novidades' ou 'acessorios' (sem produtos ainda), pode retornar todos ou uma lista vazia.
-        // Neste exemplo, 'novidades' retorna todos.
-        if (strtolower($categoria) === 'novidades') {
-            return self::$produtos;
-        }
-
-        $resultados = [];
-        foreach (self::$produtos as $produto) {
-            if (isset($produto['categoria']) && strtolower($produto['categoria']) === strtolower($categoria)) {
-                $resultados[] = $produto;
-            }
-        }
-        return $resultados;
-    }
-
 
     /**
      * Deleta um produto pelo ID.
@@ -112,8 +86,7 @@ class Produto {
             "nome" => $dados['nome'] ?? 'Nome do Produto',
             "preco" => $dados['preco'] ?? 0.0,
             "estoque" => $dados['estoque'] ?? 0,
-            "imagem" => $dados['imagem'] ?? 'default.jpg',
-            "categoria" => $dados['categoria'] ?? 'geral' // Adicionado
+            "imagem" => $dados['imagem'] ?? 'default.jpg'
         ];
 
         self::$produtos[] = $novoProduto;
@@ -134,7 +107,6 @@ class Produto {
                 self::$produtos[$key]['preco'] = $dados['preco'] ?? $produto['preco'];
                 self::$produtos[$key]['estoque'] = $dados['estoque'] ?? $produto['estoque'];
                 self::$produtos[$key]['imagem'] = $dados['imagem'] ?? $produto['imagem'];
-                self::$produtos[$key]['categoria'] = $dados['categoria'] ?? $produto['categoria']; // Adicionado
                 
                 return self::$produtos[$key];
             }
