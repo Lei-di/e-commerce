@@ -24,7 +24,7 @@ class Produto {
             "nome" => "Calça Jeans Feminina",
             "preco" => 149.90,
             "estoque" => 15,
-            "imagem" => "calca_jeans.jpg",
+            "imagem" => "calca_jeans.jpeg",
             "categoria" => "feminino" // ADICIONADO
         ]
     ];
