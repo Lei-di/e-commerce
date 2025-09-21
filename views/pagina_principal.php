@@ -16,9 +16,7 @@
         <div class="conteudo-propaganda">
             <h1>NOVA COLEÇÃO</h1>
             <h3>Descubra as últimas tendências da moda feminina</h3>
-<a class="botao-colecao" href="<?= BASE_URL ?>/categorias?categoria=feminino">Explorar Coleção</a>
-
-
+            <a class="botao-colecao" href="<?= BASE_URL ?>/?categoria=feminino">Explorar Coleção</a>
         </div>
     </section>
 
@@ -26,7 +24,6 @@
     <main>
         <div class="filtro">
              <h3>Filtros</h3>
-
 
             <h4 class="categoria">Categoria</h4>
             <div class="opcoes">
@@ -67,20 +64,34 @@
             </article>
         </div>
        <div class="area-produto">
-            <h1>Todos</h1>
+            <h1><?= htmlspecialchars($titulo) ?></h1>
             <div class="lista-produtos">
+                <?php if (empty($produtos)): ?>
+                    <p>Nenhum produto encontrado nesta categoria.</p>
+                <?php else: ?>
+                    <?php foreach ($produtos as $produto): ?>
+                        <div class="produto">
+                            <div class="foto-produto">
+                                <img src="<?= BASE_URL ?>/assets/imagens/<?= htmlspecialchars($produto['imagem']) ?>" alt="<?= htmlspecialchars($produto['nome']) ?>">
+                                <button class="btn-comprar">ADICIONAR AO CARRINHO</button>
+                            </div>
+                            <div class="info-produto">
+                                <p><?= strtoupper(htmlspecialchars($produto['categoria'] ?? 'CATEGORIA')) ?></p>
+                                <h4><?= htmlspecialchars($produto['nome']) ?></h4>
+                                <h3>R$ <?= number_format($produto['preco'], 2, ',', '.') ?></h3>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
                 </div>
         </div>
     </main>
 
 
     <script>
-        // Passa a URL base do PHP para o JavaScript
+        // Passa a URL base do PHP para o JavaScript, caso seja necessário para outras funcionalidades
         const baseURL = "<?= BASE_URL ?>";
     </script>
     <script src="<?= BASE_URL ?>/js/main.js"></script>
 </body>
 </html>
-
-
-
