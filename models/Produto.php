@@ -1,141 +1,172 @@
 <?php
-// models/Produto.php
+require_once __DIR__ . '/../config/configBanco.php';
 
 class Produto {
-    private static $produtos = [
-        [
-            "id" => 1,
-            "nome" => "Vestido Longo Elegance",
-            "preco" => 199.90,
-            "estoque" => 12,
-            "imagem" => "vestido.jpg",
-            "categoria" => "feminino" // ADICIONADO
-        ],
-        [
-            "id" => 2,
-            "nome" => "Camisa Social Masculina",
-            "preco" => 129.90,
-            "estoque" => 20,
-            "imagem" => "camisa_social.jpg",
-            "categoria" => "masculino" // ADICIONADO
-        ],
-        [
-            "id" => 3,
-            "nome" => "Calça Jeans Feminina",
-            "preco" => 149.90,
-            "estoque" => 15,
-            "imagem" => "calca_feminina.jpg",
-            "categoria" => "feminino" // ADICIONADO
-        ]
-    ];
 
+    // Lista todos os produtos com categoria e estoque
     public static function getAll() {
-        return self::$produtos;
+        global $conn;
+
+        $sql = "SELECT 
+                    p.id_produto AS id,
+                    p.nome AS nome,
+                    c.nome AS categoria,
+                    p.preco,
+                    e.quantidade AS estoque,
+                    p.imagem
+                FROM produtos p
+                JOIN categorias c ON p.id_categoria = c.id_categoria
+                JOIN estoque e ON p.id_produto = e.id_produto
+                ORDER BY p.nome";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    /**
-     * NOVA FUNÇÃO ADICIONADA
-     * Busca produtos por categoria.
-     */
-    public static function getByCategoria($categoria) {
-        if (strtolower($categoria) === 'novidades') {
-            return self::$produtos;
-        }
-
-        $resultados = [];
-        foreach (self::$produtos as $produto) {
-            if (isset($produto['categoria']) && strtolower($produto['categoria']) === strtolower($categoria)) {
-                $resultados[] = $produto;
-            }
-        }
-        return $resultados;
-    }
-
-    // A SEGUIR, O RESTANTE DO SEU CÓDIGO ORIGINAL QUE FOI MANTIDO
-
+    // Busca produto por ID
     public static function getById($id) {
-        foreach (self::$produtos as $produto) {
-            if ($produto["id"] == $id) {
-                return $produto;
-            }
-        }
-        return null;
+        global $conn;
+
+        $sql = "SELECT 
+                    p.id_produto AS id,
+                    p.nome AS nome,
+                    c.nome AS categoria,
+                    p.preco,
+                    e.quantidade AS estoque,
+                    p.imagem
+                FROM produtos p
+                JOIN categorias c ON p.id_categoria = c.id_categoria
+                JOIN estoque e ON p.id_produto = e.id_produto
+                WHERE p.id_produto = :id
+                LIMIT 1";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    /**
-     * Deleta um produto pelo ID.
-     * @param int $id
-     * @return bool Retorna true se o produto foi deletado, false caso contrário.
-     */
-    public static function deletar($id) {
-        foreach (self::$produtos as $key => $produto) {
-            if ($produto['id'] == $id) {
-                unset(self::$produtos[$key]);
-                // Reindexar o array para manter a consistência
-                self::$produtos = array_values(self::$produtos);
-                return true;
-            }
+    // Busca produtos por categoria
+    public static function getByCategoria($categoria) {
+        global $conn;
+
+        if (strtolower($categoria) === 'novidades') {
+            return self::getAll();
         }
-        return false;
+
+        $sql = "SELECT 
+                    p.id_produto AS id,
+                    p.nome AS nome,
+                    c.nome AS categoria,
+                    p.preco,
+                    e.quantidade AS estoque,
+                    p.imagem
+                FROM produtos p
+                JOIN categorias c ON p.id_categoria = c.id_categoria
+                JOIN estoque e ON p.id_produto = e.id_produto
+                WHERE LOWER(c.nome) = LOWER(:categoria)
+                ORDER BY p.nome";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':categoria', $categoria, PDO::PARAM_STR);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    /**
-     * Busca produtos por um termo no nome.
-     * @param string $termo
-     * @return array Retorna um array de produtos que correspondem ao termo.
-     */
+    // Busca produtos pelo termo no nome
     public static function buscarPorNome($termo) {
-        $resultados = [];
-        foreach (self::$produtos as $produto) {
-            // stristr é case-insensitive (não diferencia maiúsculas de minúsculas)
-            if (stristr($produto['nome'], $termo)) {
-                $resultados[] = $produto;
-            }
-        }
-        return $resultados;
+        global $conn;
+
+        $sql = "SELECT 
+                    p.id_produto AS id,
+                    p.nome AS nome,
+                    c.nome AS categoria,
+                    p.preco,
+                    e.quantidade AS estoque,
+                    p.imagem
+                FROM produtos p
+                JOIN categorias c ON p.id_categoria = c.id_categoria
+                JOIN estoque e ON p.id_produto = e.id_produto
+                WHERE p.nome LIKE :termo
+                ORDER BY p.nome";
+
+        $like = "%$termo%";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':termo', $like, PDO::PARAM_STR);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    /**
-     * Cria um novo produto.
-     * @param array $dados Os dados do novo produto (nome, preco, etc.).
-     * @return array O novo produto criado.
-     */
+    // Cria um novo produto
     public static function criar($dados) {
-        // Gera um novo ID para o produto
-        $novoId = count(self::$produtos) > 0 ? max(array_column(self::$produtos, 'id')) + 1 : 1;
+        global $conn;
 
-        $novoProduto = [
-            "id" => $novoId,
-            "nome" => $dados['nome'] ?? 'Nome do Produto',
-            "preco" => $dados['preco'] ?? 0.0,
-            "estoque" => $dados['estoque'] ?? 0,
-            "imagem" => $dados['imagem'] ?? 'default.jpg',
-            "categoria" => $dados['categoria'] ?? 'geral' // Adicionado para ser consistente
-        ];
+        $sql = "INSERT INTO produtos (nome, preco, id_categoria, imagem)
+                VALUES (:nome, :preco, :id_categoria, :imagem)";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':nome', $dados['nome']);
+        $stmt->bindParam(':preco', $dados['preco']);
+        $stmt->bindParam(':id_categoria', $dados['id_categoria']);
+        $stmt->bindParam(':imagem', $dados['imagem']);
+        $stmt->execute();
 
-        self::$produtos[] = $novoProduto;
-        return $novoProduto;
+        $id = $conn->lastInsertId();
+
+        // Insere estoque inicial
+        $sqlEstoque = "INSERT INTO estoque (id_produto, quantidade) VALUES (:id, :quantidade)";
+        $stmtEstoque = $conn->prepare($sqlEstoque);
+        $quantidade = $dados['estoque'] ?? 0;
+        $stmtEstoque->bindParam(':id', $id);
+        $stmtEstoque->bindParam(':quantidade', $quantidade);
+        $stmtEstoque->execute();
+
+        return self::getById($id);
     }
 
-    /**
-     * Atualiza um produto existente pelo ID.
-     * @param int $id O ID do produto a ser atualizado.
-     * @param array $dados Os novos dados do produto.
-     * @return array|null O produto atualizado ou null se não for encontrado.
-     */
+    // Atualiza produto existente
     public static function atualizar($id, $dados) {
-        foreach (self::$produtos as $key => $produto) {
-            if ($produto['id'] == $id) {
-                // Atualiza apenas os campos fornecidos
-                self::$produtos[$key]['nome'] = $dados['nome'] ?? $produto['nome'];
-                self::$produtos[$key]['preco'] = $dados['preco'] ?? $produto['preco'];
-                self::$produtos[$key]['estoque'] = $dados['estoque'] ?? $produto['estoque'];
-                self::$produtos[$key]['imagem'] = $dados['imagem'] ?? $produto['imagem'];
-                self::$produtos[$key]['categoria'] = $dados['categoria'] ?? $produto['categoria']; // Adicionado para ser consistente
-                
-                return self::$produtos[$key];
-            }
+        global $conn;
+
+        $sql = "UPDATE produtos 
+                SET nome = :nome, preco = :preco, id_categoria = :id_categoria, imagem = :imagem
+                WHERE id_produto = :id";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':nome', $dados['nome']);
+        $stmt->bindParam(':preco', $dados['preco']);
+        $stmt->bindParam(':id_categoria', $dados['id_categoria']);
+        $stmt->bindParam(':imagem', $dados['imagem']);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        // Atualiza estoque se fornecido
+        if (isset($dados['estoque'])) {
+            $sqlEstoque = "UPDATE estoque SET quantidade = :quantidade WHERE id_produto = :id";
+            $stmtEstoque = $conn->prepare($sqlEstoque);
+            $stmtEstoque->bindParam(':quantidade', $dados['estoque']);
+            $stmtEstoque->bindParam(':id', $id, PDO::PARAM_INT);
+            $stmtEstoque->execute();
         }
-        return null; // Retorna null se o produto não for encontrado
+
+        return self::getById($id);
+    }
+
+    // Deleta produto
+    public static function deletar($id) {
+        global $conn;
+
+        // Primeiro deleta o estoque
+        $sqlEstoque = "DELETE FROM estoque WHERE id_produto = :id";
+        $stmtEstoque = $conn->prepare($sqlEstoque);
+        $stmtEstoque->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmtEstoque->execute();
+
+        // Depois deleta o produto
+        $sql = "DELETE FROM produtos WHERE id_produto = :id";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->rowCount() > 0;
     }
 }
