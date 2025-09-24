@@ -73,6 +73,19 @@ class Router {
                 (new ProdutoController())->buscarProdutos($termo);
                 break;
 
+            // Buscar produtos por categoria
+            case $method === 'GET' && preg_match('/^\/api\/produtos\/categoria\/(.+)$/', $path, $matches):
+                $categoria = urldecode($matches[1]);
+                (new ProdutoController())->buscarPorCategoria($categoria);
+                break;
+
+            // Buscar produtos por faixa de preço
+            case $method === 'GET' && preg_match('/^\/api\/produtos\/preco\/(\d+)\/(\d+)$/', $path, $matches):
+                $min = (int)$matches[1];
+                $max = (int)$matches[2];
+                (new ProdutoController())->buscarPorPreco($min, $max);
+                break;
+
             case $path === '/api/usuario/cadastrar':
                 (new UsuarioController())->registrar();
                 break;

@@ -169,4 +169,28 @@ class Produto {
 
         return $stmt->rowCount() > 0;
     }
+
+    // Busca por faixa de preço
+    public static function getByFaixaDePreco($min, $max) {
+        global $conn;
+
+        $sql = "SELECT 
+                    p.id_produto AS id,
+                    p.nome AS nome,
+                    c.nome AS categoria,
+                    p.preco,
+                    e.quantidade AS estoque,
+                    p.imagem
+                FROM produtos p
+                JOIN categorias c ON p.id_categoria = c.id_categoria
+                JOIN estoque e ON p.id_produto = e.id_produto
+                WHERE p.preco BETWEEN :min AND :max
+                ORDER BY p.preco ASC";
+
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':min', $min, PDO::PARAM_INT);
+        $stmt->bindParam(':max', $max, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
