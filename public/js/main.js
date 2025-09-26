@@ -8,14 +8,15 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
+    // Usamos a baseURL para montar o caminho correto da imagem
     listaProdutos.innerHTML = produtos.map(p => `
       <div class="produto">
         <div class="foto-produto">
-          <img src="/assets/imagens/${p.imagem}" alt="${p.nome}">
+          <img src="${baseURL}/assets/imagens/${p.imagem}" alt="${p.nome}">
           <button class="btn-comprar">ADICIONAR AO CARRINHO</button>
         </div>
         <div class="info-produto">
-          <p>${p.categoria}</p>
+          <p>${p.categoria.toUpperCase()}</p>
           <h4>${p.nome}</h4>
           <h3>R$ ${parseFloat(p.preco).toFixed(2).replace('.', ',')}</h3>
         </div>
@@ -25,19 +26,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Função que busca produtos no backend
   async function filtrarProdutos(params = {}) {
-    let url = '/api/produtos';
+    // Adicionamos a baseURL aqui para montar a URL completa
+    let url = `${baseURL}/api/produtos`;
 
     // Se tiver categoria ou preço, usamos endpoints específicos
     if (params.categoria) {
-      url = `/api/produtos/buscar/${encodeURIComponent(params.categoria)}`;
+      url = `${baseURL}/api/produtos/buscar/${encodeURIComponent(params.categoria)}`;
     } else if (params.preco) {
       const [min, max] = params.preco.split('-');
-      url = `/api/produtos/preco/${min}/${max}`;
+      url = `${baseURL}/api/produtos/preco/${min}/${max}`;
     }
 
-    const response = await fetch(url);
-    const data = await response.json();
-    renderProdutos(data);
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            // Se a resposta não for OK (ex: 404), lança um erro para ser pego pelo catch
+            throw new Error(`Erro na requisição: ${response.statusText}`);
+        }
+        const data = await response.json();
+        renderProdutos(data);
+    } catch (error) {
+        console.error("Falha ao buscar produtos:", error);
+        listaProdutos.innerHTML = "<p>Ocorreu um erro ao carregar os produtos. Tente novamente mais tarde.</p>";
+    }
   }
 
   // Inicializa lista com todos os produtos
