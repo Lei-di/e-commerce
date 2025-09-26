@@ -49,10 +49,31 @@ class Carrinho {
         return false; // Retorna falha se o item não existir
     }
 
-    // Método para obter todos os itens do carrinho
+    // Método para obter todos os itens do carrinho com detalhes
     public function getItens() {
-        return $_SESSION['carrinho'] ?? [];
+        $itensCarrinho = $_SESSION['carrinho'] ?? [];
+        $itensDetalhados = [];
+
+        if (empty($itensCarrinho)) {
+            return [];
+        }
+
+        foreach ($itensCarrinho as $produtoId => $quantidade) {
+            $produto = Produto::getById($produtoId);
+            if ($produto) {
+                $itensDetalhados[] = [
+                    'id' => $produto['id'],
+                    'nome' => $produto['nome'],
+                    'preco' => $produto['preco'],
+                    'imagem' => $produto['imagem'],
+                    'quantidade' => $quantidade
+                ];
+            }
+        }
+
+        return $itensDetalhados;
     }
+
 
     // Método para esvaziar o carrinho após a finalização da compra
     public function esvaziarCarrinho() {

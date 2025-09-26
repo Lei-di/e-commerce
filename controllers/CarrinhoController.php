@@ -44,8 +44,24 @@ class CarrinhoController extends Controller {
     public function ver() {
         $carrinho = new Carrinho();
         $itens = $carrinho->getItens();
-        $this->jsonResponse($itens, 200);
+        $totalCarrinho = 0;
+        $itensComSubtotal = [];
+
+        foreach ($itens as $item) {
+            $subtotal = $item['preco'] * $item['quantidade'];
+            $totalCarrinho += $subtotal;
+            $item['subtotal'] = $subtotal;
+            $itensComSubtotal[] = $item;
+        }
+
+        $resposta = [
+            'itens' => $itensComSubtotal,
+            'total' => $totalCarrinho
+        ];
+
+        $this->jsonResponse($resposta, 200);
     }
+
 
     public function finalizar() {
         $carrinho = new Carrinho();
