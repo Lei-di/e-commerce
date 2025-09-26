@@ -1,14 +1,14 @@
 document.addEventListener("DOMContentLoaded", () => {
   const listaProdutos = document.querySelector(".lista-produtos");
+  const categoryLinks = document.querySelectorAll(".category-link"); // Seleciona os links de categoria
 
   // Função para renderizar produtos recebidos da API
   function renderProdutos(produtos) {
     if (!produtos || produtos.length === 0) {
-      listaProdutos.innerHTML = "<p>Nenhum produto encontrado.</p>";
+      listaProdutos.innerHTML = "<p>Nenhum produto encontrado para esta categoria.</p>";
       return;
     }
 
-    // Usamos a baseURL para montar o caminho correto da imagem
     listaProdutos.innerHTML = produtos.map(p => `
       <div class="produto">
         <div class="foto-produto">
@@ -26,47 +26,43 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Função que busca produtos no backend
   async function filtrarProdutos(params = {}) {
-    // Adicionamos a baseURL aqui para montar a URL completa
-    let url = `${baseURL}/api/produtos`;
+    let url = `${baseURL}/api/produtos`; // URL padrão
 
-    // Se tiver categoria ou preço, usamos endpoints específicos
+    // Se uma categoria foi passada, monta a URL correta para a API de categorias
     if (params.categoria) {
-      url = `${baseURL}/api/produtos/buscar/${encodeURIComponent(params.categoria)}`;
+      // CORREÇÃO: A URL da sua API de categoria é '/api/produtos/categoria/...'
+      url = `${baseURL}/api/produtos/categoria/${encodeURIComponent(params.categoria)}`;
     } else if (params.preco) {
       const [min, max] = params.preco.split('-');
       url = `${baseURL}/api/produtos/preco/${min}/${max}`;
     }
 
     try {
-        const response = await fetch(url);
-        if (!response.ok) {
-            // Se a resposta não for OK (ex: 404), lança um erro para ser pego pelo catch
-            throw new Error(`Erro na requisição: ${response.statusText}`);
-        }
-        const data = await response.json();
-        renderProdutos(data);
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Erro na requisição: ${response.statusText}`);
+      }
+      const data = await response.json();
+      renderProdutos(data);
     } catch (error) {
-        console.error("Falha ao buscar produtos:", error);
-        listaProdutos.innerHTML = "<p>Ocorreu um erro ao carregar os produtos. Tente novamente mais tarde.</p>";
+      console.error("Falha ao buscar produtos:", error);
+      listaProdutos.innerHTML = "<p>Ocorreu um erro ao carregar os produtos.</p>";
     }
   }
 
-  // Inicializa lista com todos os produtos
-  filtrarProdutos();
-
-  // Filtro por categoria (checkboxes ou select)
-  const filtroCategoria = document.getElementById("filtroCategoria");
-  if (filtroCategoria) {
-    filtroCategoria.addEventListener("change", e => {
-      filtrarProdutos({ categoria: e.target.value });
+  // NOVO: Adiciona o evento de clique para cada link de categoria
+  categoryLinks.forEach(link => {
+    link.addEventListener("click", (event) => {
+      event.preventDefault(); // Impede o recarregamento da página
+      const category = link.dataset.category; // Pega a categoria do atributo data-category
+      
+      // Chama a função de filtro com a categoria clicada
+      filtrarProdutos({ categoria: category });
     });
-  }
+  });
 
-  // Filtro por preço (ex: "0-100", "100-200")
-  const filtroPreco = document.getElementById("filtroPreco");
-  if (filtroPreco) {
-    filtroPreco.addEventListener("change", e => {
-      filtrarProdutos({ preco: e.target.value });
-    });
-  }
+
+  // Inicializa a lista com todos os produtos ("Novidades")
+  filtrarProdutos({ categoria: 'novidades' });
+
 });
