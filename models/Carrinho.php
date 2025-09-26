@@ -1,4 +1,6 @@
 <?php
+// É necessário incluir o arquivo do model Produto para acessar o estoque
+require_once __DIR__ . '/Produto.php';
 
 class Carrinho {
 
@@ -9,18 +11,33 @@ class Carrinho {
         }
     }
 
-    // Método para adicionar um item ao carrinho
+    // Método para adicionar um item ao carrinho com validação de estoque
     public function adicionarItem($produtoId, $quantidade) {
-        // Se o carrinho não existir na sessão, crie-o como um array vazio
+        // Busca os dados do produto para obter a quantidade em estoque
+        $produto = Produto::getById($produtoId);
+
+        // Verifica se o produto existe
+        if (!$produto) {
+            return ['success' => false, 'message' => 'Produto não encontrado.'];
+        }
+        
+        // Compara o estoque disponível com a quantidade solicitada
+        $estoqueDisponivel = (int)$produto['estoque'];
+        if ($quantidade > $estoqueDisponivel) {
+            // Se não houver estoque, retorna um erro
+            return ['success' => false, 'message' => 'Estoque insuficiente.'];
+        }
+
+        // Se o carrinho não existir na sessão, cria o array
         if (!isset($_SESSION['carrinho'])) {
             $_SESSION['carrinho'] = [];
         }
 
-        // Exemplo de como adicionar/atualizar o item
-        // No mundo real, você verificaria se o produto existe
+        // Adiciona ou atualiza o item no carrinho
         $_SESSION['carrinho'][$produtoId] = $quantidade;
 
-        return true; // Retorna sucesso
+        // Retorna sucesso se o item foi adicionado
+        return ['success' => true];
     }
 
     // Método para remover um item do carrinho

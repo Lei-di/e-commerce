@@ -12,11 +12,20 @@ class CarrinhoController extends Controller {
         $produtoId = $data['produto_id'] ?? null;
         $quantidade = $data['quantidade'] ?? 1;
 
-        if ($produtoId) {
-            $carrinho->adicionarItem($produtoId, $quantidade);
+        if (!$produtoId) {
+            $this->jsonError('Produto não especificado.', 400);
+            return;
+        }
+
+        // Chama o método modificado que retorna um array com status e mensagem
+        $resultado = $carrinho->adicionarItem($produtoId, $quantidade);
+
+        // Se o resultado for sucesso, envia a resposta padrão
+        if ($resultado['success']) {
             $this->jsonResponse(['status' => 'success', 'message' => 'Item adicionado ao carrinho.'], 200);
         } else {
-            $this->jsonError('Produto não especificado.', 400);
+            // Se falhar, usa a mensagem de erro retornada pelo model e o código de erro 400
+            $this->jsonError($resultado['message'], 400);
         }
     }
 
