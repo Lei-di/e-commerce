@@ -7,7 +7,6 @@ class CarrinhoController extends Controller {
 
     public function adicionar() {
         $carrinho = new Carrinho();
-        // Obter os dados do produto do corpo da requisição POST
         $data = json_decode(file_get_contents('php://input'), true);
         $produtoId = $data['produto_id'] ?? null;
         $quantidade = $data['quantidade'] ?? 1;
@@ -17,14 +16,34 @@ class CarrinhoController extends Controller {
             return;
         }
 
-        // Chama o método modificado que retorna um array com status e mensagem
         $resultado = $carrinho->adicionarItem($produtoId, $quantidade);
-
-        // Se o resultado for sucesso, envia a resposta padrão
         if ($resultado['success']) {
             $this->jsonResponse(['status' => 'success', 'message' => 'Item adicionado ao carrinho.'], 200);
         } else {
-            // Se falhar, usa a mensagem de erro retornada pelo model e o código de erro 400
+            $this->jsonError($resultado['message'], 400);
+        }
+    }
+    
+    /**
+     * NOVO MÉTODO
+     * Lida com a requisição de atualização de quantidade.
+     */
+    public function atualizar() {
+        $carrinho = new Carrinho();
+        $data = json_decode(file_get_contents('php://input'), true);
+        $produtoId = $data['produto_id'] ?? null;
+        $quantidade = $data['quantidade'] ?? null;
+
+        if (!$produtoId || $quantidade === null) {
+            $this->jsonError('ID do produto e quantidade são obrigatórios.', 400);
+            return;
+        }
+
+        $resultado = $carrinho->atualizarItem($produtoId, (int)$quantidade);
+
+        if ($resultado['success']) {
+            $this->jsonResponse(['status' => 'success', 'message' => $resultado['message']], 200);
+        } else {
             $this->jsonError($resultado['message'], 400);
         }
     }
@@ -62,7 +81,6 @@ class CarrinhoController extends Controller {
         $this->jsonResponse($resposta, 200);
     }
 
-
     public function finalizar() {
         $carrinho = new Carrinho();
         $pedido = new Pedido();
@@ -71,7 +89,7 @@ class CarrinhoController extends Controller {
         $resultado = $pedido->finalizarPedido($itensCarrinho);
 
         if ($resultado['status'] == 'success') {
-            $carrinho->esvaziarCarrinho(); // Esvaziar o carrinho após a compra
+            $carrinho->esvaziarCarrinho();
         }
 
         $this->jsonResponse($resultado, 200);

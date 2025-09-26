@@ -11,7 +11,6 @@ require_once __DIR__ . '/../controllers/UsuarioController.php';
 
 class Router {
     public function handleRequest($path) {
-        // Pega o método da requisição (GET, POST, DELETE, etc.)
         $method = $_SERVER['REQUEST_METHOD'];
 
         switch (true) {
@@ -31,6 +30,11 @@ class Router {
 
             case $path === '/api/carrinho/adicionar':
                 (new CarrinhoController())->adicionar();
+                break;
+            
+            // --- NOVA ROTA AQUI ---
+            case $method === 'PUT' && $path === '/api/carrinho/atualizar':
+                (new CarrinhoController())->atualizar();
                 break;
 
             case $path === '/api/carrinho/remover':
@@ -61,25 +65,20 @@ class Router {
                 (new ProdutoController())->buscarPorId($matches[1]);
                 break;
             
-            // Nova rota para deletar produto
             case $method === 'DELETE' && preg_match('/^\/api\/produtos\/deletar\/(\d+)$/', $path, $matches):
                 (new ProdutoController())->deletarProduto($matches[1]);
                 break;
 
-            // Nova rota para buscar produtos
             case $method === 'GET' && preg_match('/^\/api\/produtos\/buscar\/(.+)$/', $path, $matches):
-                // Decodifica o termo da URL (ex: espaços %20)
                 $termo = urldecode($matches[1]);
                 (new ProdutoController())->buscarProdutos($termo);
                 break;
 
-            // Buscar produtos por categoria
             case $method === 'GET' && preg_match('/^\/api\/produtos\/categoria\/(.+)$/', $path, $matches):
                 $categoria = urldecode($matches[1]);
                 (new ProdutoController())->buscarPorCategoria($categoria);
                 break;
 
-            // Buscar produtos por faixa de preço
             case $method === 'GET' && preg_match('/^\/api\/produtos\/preco\/(\d+)\/(\d+)$/', $path, $matches):
                 $min = (int)$matches[1];
                 $max = (int)$matches[2];

@@ -13,31 +13,54 @@ class Carrinho {
 
     // Método para adicionar um item ao carrinho com validação de estoque
     public function adicionarItem($produtoId, $quantidade) {
-        // Busca os dados do produto para obter a quantidade em estoque
         $produto = Produto::getById($produtoId);
-
-        // Verifica se o produto existe
         if (!$produto) {
             return ['success' => false, 'message' => 'Produto não encontrado.'];
         }
         
-        // Compara o estoque disponível com a quantidade solicitada
         $estoqueDisponivel = (int)$produto['estoque'];
         if ($quantidade > $estoqueDisponivel) {
-            // Se não houver estoque, retorna um erro
             return ['success' => false, 'message' => 'Estoque insuficiente.'];
         }
 
-        // Se o carrinho não existir na sessão, cria o array
         if (!isset($_SESSION['carrinho'])) {
             $_SESSION['carrinho'] = [];
         }
 
-        // Adiciona ou atualiza o item no carrinho
         $_SESSION['carrinho'][$produtoId] = $quantidade;
-
-        // Retorna sucesso se o item foi adicionado
         return ['success' => true];
+    }
+
+    /**
+     * NOVO MÉTODO
+     * Atualiza a quantidade de um item no carrinho com validação de estoque.
+     */
+    public function atualizarItem($produtoId, $novaQuantidade) {
+        // Se a quantidade for 0, remove o item
+        if ($novaQuantidade <= 0) {
+            $this->removerItem($produtoId);
+            return ['success' => true, 'message' => 'Item removido do carrinho.'];
+        }
+
+        // Busca os dados do produto para obter o estoque
+        $produto = Produto::getById($produtoId);
+        if (!$produto) {
+            return ['success' => false, 'message' => 'Produto não encontrado.'];
+        }
+
+        // Compara o estoque com a nova quantidade solicitada
+        $estoqueDisponivel = (int)$produto['estoque'];
+        if ($novaQuantidade > $estoqueDisponivel) {
+            return ['success' => false, 'message' => 'Estoque insuficiente para a quantidade solicitada.'];
+        }
+
+        // Verifica se o item existe no carrinho para então atualizar
+        if (isset($_SESSION['carrinho'][$produtoId])) {
+            $_SESSION['carrinho'][$produtoId] = $novaQuantidade;
+            return ['success' => true, 'message' => 'Quantidade atualizada com sucesso.'];
+        }
+
+        return ['success' => false, 'message' => 'Item não encontrado no carrinho para atualizar.'];
     }
 
     // Método para remover um item do carrinho
@@ -46,7 +69,7 @@ class Carrinho {
             unset($_SESSION['carrinho'][$produtoId]);
             return true;
         }
-        return false; // Retorna falha se o item não existir
+        return false;
     }
 
     // Método para obter todos os itens do carrinho com detalhes
@@ -70,12 +93,10 @@ class Carrinho {
                 ];
             }
         }
-
         return $itensDetalhados;
     }
 
-
-    // Método para esvaziar o carrinho após a finalização da compra
+    // Método para esvaziar o carrinho
     public function esvaziarCarrinho() {
         unset($_SESSION['carrinho']);
     }
