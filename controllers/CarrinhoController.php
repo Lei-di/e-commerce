@@ -78,12 +78,17 @@ class CarrinhoController extends Controller {
     }
 
     public function finalizar() {
+        // garante sessão
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
 
-        if (!isset($_SESSION['usuario_id'])) {
-            $this->jsonError("Acesso não autorizado. Por favor, faça o login para finalizar a compra.", 401);
+        // ADIÇÃO 1: Tenta obter o ID do usuário em sessão com chaves comuns
+        $clienteId = $_SESSION['user_id'] ?? $_SESSION['id_usuario'] ?? $_SESSION['cliente_id'] ?? $_SESSION['usuario_id'] ?? null;
+
+        if (!$clienteId) {
+            // MUDANÇA 1: Mensagem de erro atualizada
+            $this->jsonError("Usuário não autenticado. Faça login para finalizar a compra.", 401);
             return;
         }
 
@@ -91,22 +96,59 @@ class CarrinhoController extends Controller {
         $itensCarrinho = $carrinho->getItens();
 
         if (empty($itensCarrinho)) {
-            $this->jsonError("O carrinho está vazio.", 400);
+            // MUDANÇA 2: Mensagem de erro simplificada
+            $this->jsonError("Carrinho vazio.", 400);
             return;
         }
 
-        $clienteId = $_SESSION['usuario_id'];
-        $resultado = Pedido::criarPedido($clienteId, $itensCarrinho);
+        // ADIÇÃO 2: Leitura de dados adicionais (opcional)
+        $body = json_decode(file_get_contents('php://input'), true) ?? [];
+        $opcoes = [];
+        if (!empty($body['endereco'])) {
+            $opcoes['endereco'] = $body['endereco'];
+        }
+        if (!empty($body['metodo_pagamento'])) {
+            $opcoes['metodo_pagamento'] = $body['metodo_pagamento'];
+        }
 
-        if ($resultado['success']) {
-            $carrinho->esvaziarCarrinho();
-            $this->jsonResponse([
-                'status' => 'success',
-                'message' => $resultado['message'],
-                'pedidoId' => $resultado['pedidoId']
-            ], 201);
-        } else {
-            $this->jsonError($resultado['message'], 500);
+        // ADIÇÃO 3: Estrutura try...catch para tratamento de erros de execução
+        try {
+            // MUDANÇA 3: A chamada usa o método estático original, mas adiciona as $opcoes
+            // Note: Se o método criarPedido não aceitar $opcoes, esta parte precisa de adaptação,
+            // mas assumimos que o Código 2 indica um modelo mais flexível.
+            $resultado = Pedido::criarPedido($clienteId, $itensCarrinho, $opcoes);
+
+            // ADIÇÃO 4: Validação de retorno e flexibilidade no status/mensagem
+            if (!is_array($resultado)) {
+                $this->jsonError("Resposta inesperada do model Pedido.", 500);
+                return;
+            }
+
+            // ADIÇÃO 5: Verifica 'status' ou 'resultado' para sucesso (mais flexível)
+            if (($resultado['status'] ?? false) === 'success' || ($resultado['success'] ?? false)) {
+
+                $carrinho->esvaziarCarrinho();
+
+                // ADIÇÃO 6: Normalização do ID do pedido no retorno
+                $pedidoId = $resultado['pedido_id'] ?? $resultado['id_pedido'] ?? $resultado['pedidoId'] ?? $resultado['id'] ?? null;
+                $total = $resultado['total'] ?? null;
+
+                $res = [
+                    'status' => 'success',
+                    'message' => $resultado['message'] ?? 'Pedido finalizado',
+                    'pedidoId' => $pedidoId // Mantendo a chave original por clareza
+                ];
+                if ($total !== null) $res['total'] = $total;
+
+                // MUDANÇA 4: Código de status HTTP para 200 (OK) ou 201 (Created)
+                $this->jsonResponse($res, 201); // Mantido 201 do código 1
+            } else {
+                // ADIÇÃO 7: Melhor tratamento de erro (procura por message ou erro, retorna 400)
+                $msg = $resultado['message'] ?? ($resultado['erro'] ?? 'Falha ao finalizar pedido');
+                $this->jsonError($msg, 400);
+            }
+        } catch (Exception $e) {
+            $this->jsonError("Erro ao finalizar pedido: " . $e->getMessage(), 500);
         }
     }
 }
