@@ -102,21 +102,18 @@ class CarrinhoController extends Controller {
         }
 
         // ADIÇÃO 2: Leitura de dados adicionais (opcional)
-        $body = json_decode(file_get_contents('php://input'), true) ?? [];
+        /*$body = json_decode(file_get_contents('php://input'), true) ?? [];
         $opcoes = [];
         if (!empty($body['endereco'])) {
             $opcoes['endereco'] = $body['endereco'];
         }
         if (!empty($body['metodo_pagamento'])) {
             $opcoes['metodo_pagamento'] = $body['metodo_pagamento'];
-        }
+        }*/
 
         // ADIÇÃO 3: Estrutura try...catch para tratamento de erros de execução
         try {
-            // MUDANÇA 3: A chamada usa o método estático original, mas adiciona as $opcoes
-            // Note: Se o método criarPedido não aceitar $opcoes, esta parte precisa de adaptação,
-            // mas assumimos que o Código 2 indica um modelo mais flexível.
-            $resultado = Pedido::criarPedido($clienteId, $itensCarrinho, $opcoes);
+            $resultado = Pedido::criarPedido($clienteId, $itensCarrinho);
 
             // ADIÇÃO 4: Validação de retorno e flexibilidade no status/mensagem
             if (!is_array($resultado)) {
