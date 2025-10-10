@@ -1,5 +1,5 @@
 <?php
-// Controllers que carregam as Views (Páginas)
+// Controllers que carregam as Views 
 require_once __DIR__ . '/../controllers/web/HomeController.php';
 require_once __DIR__ . '/../controllers/web/PerfilController.php';
 
@@ -8,13 +8,15 @@ require_once __DIR__ . '/../controllers/LoginController.php';
 require_once __DIR__ . '/../controllers/CarrinhoController.php';
 require_once __DIR__ . '/../controllers/ProdutoController.php';
 require_once __DIR__ . '/../controllers/UsuarioController.php';
+//Adicionado o novo controller de Pedido
+require_once __DIR__ . '/../controllers/PedidoController.php';
 
 class Router {
     public function handleRequest($path) {
         $method = $_SERVER['REQUEST_METHOD'];
 
         switch (true) {
-            // --- Rotas para carregar Views (Páginas) ---
+            // Rotas para carregar Views 
             case $path === '/':
                 (new HomeController())->index();
                 break;
@@ -23,7 +25,6 @@ class Router {
                 (new PerfilController())->index();
                 break;
 
-            // --- Rotas da API (retornam JSON) ---
             case $path === '/api/login':
                 (new LoginController())->login();
                 break;
@@ -32,7 +33,6 @@ class Router {
                 (new CarrinhoController())->adicionar();
                 break;
             
-            // --- NOVA ROTA AQUI ---
             case $method === 'PUT' && $path === '/api/carrinho/atualizar':
                 (new CarrinhoController())->atualizar();
                 break;
@@ -43,6 +43,11 @@ class Router {
 
             case $path === '/api/carrinho/ver':
                 (new CarrinhoController())->ver();
+                break;
+
+            //Adicionada a nova rota para listar pedidos do usuário
+            case $method === 'GET' && $path === '/api/meus-pedidos':
+                (new PedidoController())->listarPedidosDoUsuario();
                 break;
 
             case $path === '/api/pedido/finalizar':
