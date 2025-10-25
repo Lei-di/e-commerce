@@ -8,7 +8,7 @@ error_reporting(E_ALL);
 define('BASE_URL', '/e-commerce/public');
 
 // Inclui o Router da pasta correta
-require_once __DIR__ . '/../config/Router.php';
+require_once dirname(_FILE_) . '/../config/Router.php';
 
 // Pega o path da URL acessada
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);

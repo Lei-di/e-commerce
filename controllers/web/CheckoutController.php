@@ -4,7 +4,7 @@ class CheckoutController {
         // Lógica para verificar se o usuário está logado pode ser adicionada aqui
         
         // Simplesmente carrega a view de checkout
-        require_once _DIR_ . '/../../views/checkout.php';
+        require_once dirname(_FILE_) . '/../../views/checkout.php';
     }
 }
 ?>
