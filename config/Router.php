@@ -1,15 +1,17 @@
 <?php
 // Controllers que carregam as Views 
-require_once __DIR__ . '/../controllers/web/HomeController.php';
-require_once __DIR__ . '/../controllers/web/PerfilController.php';
+require_once _DIR_ . '/../controllers/web/HomeController.php';
+require_once _DIR_ . '/../controllers/web/PerfilController.php';
+require_once _DIR_ . '/../controllers/web/CheckoutController.php'; // <-- ADICIONADO
+require_once _DIR_ . '/../controllers/web/PedidoConfirmadoController.php'; // <-- ADICIONADO
 
 // Controllers que respondem à API (JSON)
-require_once __DIR__ . '/../controllers/LoginController.php';
-require_once __DIR__ . '/../controllers/CarrinhoController.php';
-require_once __DIR__ . '/../controllers/ProdutoController.php';
-require_once __DIR__ . '/../controllers/UsuarioController.php';
+require_once _DIR_ . '/../controllers/LoginController.php';
+require_once _DIR_ . '/../controllers/CarrinhoController.php';
+require_once _DIR_ . '/../controllers/ProdutoController.php';
+require_once _DIR_ . '/../controllers/UsuarioController.php';
 //Adicionado o novo controller de Pedido
-require_once __DIR__ . '/../controllers/PedidoController.php';
+require_once _DIR_ . '/../controllers/PedidoController.php';
 
 class Router {
     public function handleRequest($path) {
@@ -24,6 +26,16 @@ class Router {
             case $path === '/perfil':
                 (new PerfilController())->index();
                 break;
+
+            // --- ROTAS NOVAS PARA AS VIEWS ---
+            case $path === '/checkout': // <-- ADICIONADO
+                (new CheckoutController())->index(); // <-- ADICIONADO
+                break; // <-- ADICIONADO
+
+            case $path === '/pedido_confirmado': // <-- ADICIONADO
+                (new PedidoConfirmadoController())->index(); // <-- ADICIONADO
+                break; // <-- ADICIONADO
+            // --- FIM DAS ROTAS NOVAS ---
 
             case $path === '/api/login':
                 (new LoginController())->login();
