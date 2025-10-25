@@ -1,17 +1,17 @@
 <?php
 // Controllers que carregam as Views 
-require_once _DIR_ . '/../controllers/web/HomeController.php';
-require_once _DIR_ . '/../controllers/web/PerfilController.php';
-require_once _DIR_ . '/../controllers/web/CheckoutController.php'; // <-- ADICIONADO
-require_once _DIR_ . '/../controllers/web/PedidoConfirmadoController.php'; // <-- ADICIONADO
+require_once ___DIR___ . '/../controllers/web/HomeController.php';
+require_once __DIR__ . '/../controllers/web/PerfilController.php';
+require_once __DIR__ . '/../controllers/web/CheckoutController.php'; // <-- ADICIONADO
+require_once __DIR__ . '/../controllers/web/PedidoConfirmadoController.php'; // <-- ADICIONADO
 
 // Controllers que respondem à API (JSON)
-require_once _DIR_ . '/../controllers/LoginController.php';
-require_once _DIR_ . '/../controllers/CarrinhoController.php';
-require_once _DIR_ . '/../controllers/ProdutoController.php';
-require_once _DIR_ . '/../controllers/UsuarioController.php';
+require_once __DIR__ . '/../controllers/LoginController.php';
+require_once __DIR__ . '/../controllers/CarrinhoController.php';
+require_once __DIR__ . '/../controllers/ProdutoController.php';
+require_once __DIR__ . '/../controllers/UsuarioController.php';
 //Adicionado o novo controller de Pedido
-require_once _DIR_ . '/../controllers/PedidoController.php';
+require_once __DIR__ . '/../controllers/PedidoController.php';
 
 class Router {
     public function handleRequest($path) {
