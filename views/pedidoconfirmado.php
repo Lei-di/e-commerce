@@ -10,7 +10,10 @@
     <link rel="stylesheet" href="<?= BASE_URL ?>/css/pedido_confirmado.css">
 </head>
 <body>
-    <?php include _DIR_ . '/components/cabecalho.php'; ?>
+    <?php 
+    // CORREÇÃO AQUI: Trocado _DIR_ por __DIR__
+    include __DIR__ . '/components/cabecalho.php'; 
+    ?>
 
     <div class="confirmation-container">
         <div class="confirmation-box" id="confirmation-box">
@@ -62,7 +65,7 @@
             }
 
             try {
-                const response = await fetch(${baseURL}/api/meus-pedidos);
+                const response = await fetch(`${baseURL}/api/meus-pedidos`);
                 const pedidos = await response.json(); // Pega a lista de todos os pedidos
 
                 if (!response.ok) {
@@ -107,11 +110,11 @@
                     `;
                 });
 
-                orderTotalElement.textContent = R$ ${parseFloat(pedido.total).toFixed(2).replace(".", ",")};
+                orderTotalElement.textContent = `R$ ${parseFloat(pedido.total).toFixed(2).replace(".", ",")}`;
 
             } catch (error) {
                 console.error("Erro ao buscar detalhes do pedido:", error);
-                confirmationBox.innerHTML = <h1>Erro</h1><p>${error.message}</p><a href="${baseURL}/" class="btn btn-primary">Voltar ao Início</a>;
+                confirmationBox.innerHTML = `<h1>Erro</h1><p>${error.message}</p><a href="${baseURL}/" class="btn btn-primary">Voltar ao Início</a>`;
             }
         });
     </script>

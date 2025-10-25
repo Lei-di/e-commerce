@@ -10,7 +10,10 @@
     <link rel="stylesheet" href="<?= BASE_URL ?>/css/checkout.css">
 </head>
 <body>
-    <?php include _DIR_ . '/components/cabecalho.php'; ?>
+    <?php 
+    // CORREÇÃO AQUI: Trocado _DIR_ por __DIR__
+    include __DIR__ . '/components/cabecalho.php'; 
+    ?>
 
     <div class="checkout-container">
         <div class="checkout-main">
@@ -146,7 +149,7 @@
             const btnFinalizar = document.getElementById('btn-finalizar');
 
             try {
-                const response = await fetch(${baseURL}/api/carrinho/ver);
+                const response = await fetch(`${baseURL}/api/carrinho/ver`);
                 const data = await response.json();
 
                 if (!response.ok) {
@@ -159,7 +162,7 @@
                     return;
                 }
                 
-                orderItemsContainer.innerHTML = '';"
+                orderItemsContainer.innerHTML = '';
                 data.itens.forEach(item => {
                     const itemHTML = `
                         <div class="order-item">
@@ -174,8 +177,8 @@
                     orderItemsContainer.innerHTML += itemHTML;
                 });
                 
-                subtotalEl.textContent = R$ ${parseFloat(data.total).toFixed(2).replace(".", ",")};
-                totalEl.textContent = R$ ${parseFloat(data.total).toFixed(2).replace(".", ",")};
+                subtotalEl.textContent = `R$ ${parseFloat(data.total).toFixed(2).replace(".", ",")}`;
+                totalEl.textContent = `R$ ${parseFloat(data.total).toFixed(2).replace(".", ",")}`;
 
             } catch (error) {
                 console.error("Erro ao carregar carrinho:", error);
@@ -197,7 +200,7 @@
                 btnFinalizar.disabled = true;
 
                 try {
-                    const response = await fetch(${baseURL}/api/pedido/finalizar, {
+                    const response = await fetch(`${baseURL}/api/pedido/finalizar`, {
                         method: 'POST'
                     });
                     
@@ -208,11 +211,11 @@
                     }
                     
                     const pedidoId = result.pedidoId;
-                    window.location.href = ${baseURL}/pedido_confirmado?id=${pedidoId};
+                    window.location.href = `${baseURL}/pedido_confirmado?id=${pedidoId}`;
 
                 } catch (error) {
                     console.error("Erro ao finalizar pedido:", error);
-                    alert(Erro: ${error.message});
+                    alert(`Erro: ${error.message}`);
                     btnFinalizar.textContent = 'Confirmar Pedido';
                     btnFinalizar.disabled = false;
                 }
