@@ -1,0 +1,333 @@
+* {
+  font-family: Arial, sans-serif;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden; /* remove scroll lateral */
+}
+
+.cabecalho {
+    padding: 0 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* distribui os elementos */
+    width: 100%; /* ocupa toda a largura da tela */
+    height: 100px;
+    background-color: rgb(255, 255, 255);
+}
+
+.cabecalho .logo a {
+    font-size: 20px;
+    font-weight: bold;
+    text-decoration: none;
+    color: black;
+}
+
+.cabecalho ul {
+    display: flex;
+    list-style-type: none;
+    gap: 40px; /* espaçamento entre os itens */
+    margin: 0;
+    padding: 0;
+}
+
+.cabecalho ul li h4 {
+    margin: 0;
+    cursor: pointer;
+}
+
+.cabecalho .pesquisa {
+    display: flex;
+    align-items: center;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px 5px;
+    width: 250px;
+}
+
+.cabecalho .pesquisa img {
+    width: 20px;
+    margin-right: 8px;
+}
+
+.cabecalho .pesquisa input {
+    border: none;
+    outline: none;
+    width: 100%;
+    font-size: 14px;
+}
+
+.cabecalho .area-dados {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* espaçamento entre ícones */
+}
+
+#usuario {
+    width: 40px;
+}
+
+#carrinho {
+    margin-right: 60px;
+    width: 23px;
+}
+
+/*propaganda*/
+
+.propaganda {
+    position: relative;
+    width: 100%;
+    height: 600px; /* altura fixa do banner */
+    overflow: hidden; /* corta excesso da imagem */
+}
+
+.propaganda img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* corta proporcionalmente sem distorcer */
+    display: block;
+}
+
+/* Filtro branco translúcido */
+.propaganda::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.4); /* branco com 40% de opacidade */
+}
+
+/* Texto centralizado sobre a imagem */
+.conteudo-propaganda {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: #000;
+    z-index: 1; /* garante que fique acima do filtro */
+}
+
+.conteudo-propaganda h1 {
+    font-size: 3rem;
+    margin-bottom: 10px;
+}
+
+.conteudo-propaganda h3 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+}
+
+.conteudo-propaganda button {
+    background: orange;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.conteudo-propaganda button:hover {
+    background: darkorange;
+}
+
+/*area de menu*/
+.menu {
+    width: 100%;
+    height: 100px;
+    display: flex;
+    justify-content: center; /* centraliza no eixo horizontal */
+    align-items: center;     /* centraliza no eixo vertical */
+    gap: 40px;               /* espaço entre os links */
+    border-bottom: 1px solid rgb(173, 173, 173);
+    margin-bottom: 10px;
+}
+
+.menu a {
+    text-decoration: none;
+    color: black;
+    font-size: 1.2rem;
+    font-weight: 500;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.menu .selecao{
+    background-color: orange;
+}
+
+.menu a:hover{
+    background-color: orange;
+    transition: 0.8s;
+}
+
+/*area do filtro*/
+
+.filtro{
+    padding: 0 20px;
+    width: 350px;
+    height: 600px;
+    border: 1px solid black;
+    border-radius: 10px;
+    margin-right: 10px;
+}
+
+.filtro h4{
+    margin-bottom: 0;
+}
+
+
+.filtro .preco {
+  display: flex;
+  gap: 10px;       /* espaço entre os campos */
+  align-items: center;
+}
+
+.filtro .preco input {
+  width: 80px;     /* largura menor */
+  height: 30px;    /* altura menor */
+  padding: 5px;    /* reduz espaçamento interno */
+  font-size: 14px; /* fonte menor */
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+
+.filtro .tamanho {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 colunas iguais */
+  gap: 10px 20px; /* espaçamento: 10px entre linhas, 20px entre colunas */
+}
+
+.filtro .tamanho label {
+  display: flex;
+  align-items: center;
+  gap: 5px; /* espaço entre checkbox e texto */
+  cursor: pointer;
+}
+
+
+main{
+    padding: 0 40px;
+    display: flex;
+}
+
+
+.area-produto {
+    width: 100%;
+    height: auto;
+    padding: 20px;
+}
+
+
+.area-produto h1{
+    margin-top: 0;
+    margin-right: 15px;
+}
+
+.lista-produtos {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* colunas flexíveis */
+    gap: 20px; /* espaçamento entre os cards */
+}
+
+
+.area-produto .produto {
+    width: 100%;
+    max-width: 300px; /* tamanho máximo */
+    border-radius: 10px;
+    cursor: pointer;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* foto */
+.area-produto .produto .foto-produto {
+    position: relative;   /* referência para o botão */
+    width: 100%;
+    height: 450px;
+    overflow: hidden;
+}
+
+.area-produto .produto .foto-produto img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* preenche sem deformar */
+    display: block;
+}
+
+.area-produto .produto .foto-produto .favorito {
+    position: absolute;
+    top: 15px;   /* fica em cima */
+    right: 15px; /* canto direito */
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    background: rgba(255,255,255,0.8);
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    opacity: 1; /* sempre visível */
+    transition: background 0.3s ease;
+}
+
+.area-produto .produto .foto-produto .favorito:hover {
+    background: rgba(255,165,0,0.9); /* destaque no hover */
+}
+
+/* botão sobreposto */
+.area-produto .produto .foto-produto .btn-comprar {
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    height: 40px;
+    background: rgba(255,255,255,0.7); /* branco translúcido */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    opacity: 0; /* invisível no início */
+    transition: opacity 0.3s ease;
+}
+
+/* mostra o botão quando passar o mouse */
+.area-produto .produto .foto-produto:hover .btn-comprar {
+    opacity: 1;
+}
+
+/* infos */
+.area-produto .produto .info-produto {
+    padding: 15px;
+}
+
+.area-produto .produto .info-produto p {
+    font-size: 13px;
+    color: #636161;
+    margin-bottom: 5px;
+}
+
+.area-produto .produto .info-produto h4 {
+    margin: 0 0 12px;
+}
+
+.area-produto .produto .info-produto h3 {
+    margin: 0;
+    color: rgb(254, 114, 0);
+}
