@@ -10,7 +10,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (!produtos || produtos.length === 0) {
-      listaProdutos.innerHTML = "<p>Nenhum produto encontrado para esta categoria.</p>";
+      // MUDANÇA: Mensagem mais genérica
+      listaProdutos.innerHTML = "<p>Nenhum produto encontrado.</p>";
       return;
     }
 
@@ -61,17 +62,31 @@ document.addEventListener("DOMContentLoaded", () => {
   // --- FIM DA NOVA FUNÇÃO --- // <-- ADICIONADO -->
 
 
+  // --- FUNÇÃO MODIFICADA ---
   async function filtrarProdutos(params = {}) {
     let url = `${baseURL}/api/produtos`;
+    
+    // NOVO: Seleciona o H1 para atualizar o título
+    const tituloH1 = document.querySelector('.area-produto h1');
 
-    // AQUI ESTAVA O ERRO - AGORA CORRIGIDO (Este comentário já existia)
     // Se uma categoria foi passada E não é 'novidades' (que significa 'todos')
     if (params.categoria && params.categoria !== 'novidades') {
       // Usar a rota correta para buscar por categoria
       url = `${baseURL}/api/produtos/categoria/${encodeURIComponent(params.categoria)}`;
+      // NOVO: Atualiza o título H1
+      if(tituloH1) tituloH1.textContent = params.categoria.charAt(0).toUpperCase() + params.categoria.slice(1);
+
+    } else if (params.busca) { // <-- MUDANÇA AQUI: Adicionado 'else if' para busca
+        url = `${baseURL}/api/produtos/buscar/${encodeURIComponent(params.busca)}`;
+        // NOVO: Atualiza o título H1
+        if(tituloH1) tituloH1.textContent = `Busca por: "${params.busca}"`;
+
     } else if (params.preco) { // Lógica de preço mantida como estava
       const [min, max] = params.preco.split('-');
       url = `${baseURL}/api/produtos/preco/${min}/${max}`;
+    } else {
+        // NOVO: Garante um título padrão (caso params.categoria seja 'novidades')
+        if(tituloH1) tituloH1.textContent = "Novidades";
     }
 
     try {
@@ -97,28 +112,26 @@ document.addEventListener("DOMContentLoaded", () => {
     link.addEventListener("click", (event) => {
       event.preventDefault();
       const category = link.dataset.category;
-      // <-- ADICIONADO: Atualiza o H1 da página (opcional) -->
-      const tituloH1 = document.querySelector('.area-produto h1');
-      if (tituloH1) {
-          tituloH1.textContent = category.charAt(0).toUpperCase() + category.slice(1);
-      }
+      // <-- A atualização do H1 agora é feita dentro de filtrarProdutos -->
       filtrarProdutos({ categoria: category });
     });
   });
 
-  // --- CARREGAMENTO INICIAL --- // <-- ADICIONADO: Bloco inteiro para clareza -->
-  // Pega a categoria da URL (se houver, ex: ?categoria=feminino) ou usa 'novidades'
+  // --- BLOCO MODIFICADO ---
+  // --- CARREGAMENTO INICIAL --- // 
   const urlParams = new URLSearchParams(window.location.search);
+  
+  const termoBusca = urlParams.get('busca');
   const categoriaInicial = urlParams.get('categoria') || 'novidades';
 
-  // Atualiza o título H1 inicial (opcional)
-  const tituloInicialH1 = document.querySelector('.area-produto h1');
-  if (tituloInicialH1 && categoriaInicial) {
-     tituloInicialH1.textContent = categoriaInicial.charAt(0).toUpperCase() + categoriaInicial.slice(1);
+  if (termoBusca) {
+      // Se houver um termo de busca, filtra por ele
+      filtrarProdutos({ busca: termoBusca });
+  } else {
+      // Senão, usa a lógica de categoria que já existia
+      // (Isso também atualiza o título H1 inicial corretamente)
+      filtrarProdutos({ categoria: categoriaInicial });
   }
-
-  // Busca e exibe os produtos da categoria inicial ao carregar a página
-  filtrarProdutos({ categoria: categoriaInicial });
-  // --- FIM DO CARREGAMENTO INICIAL --- // <-- ADICIONADO -->
+  // --- FIM DO CARREGAMENTO INICIAL --- //
 
 }); // Fim do DOMContentLoaded

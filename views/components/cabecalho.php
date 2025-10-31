@@ -17,8 +17,11 @@
     </ul>
     <div class="pesquisa">
         <img src="<?= BASE_URL ?>/assets/icones/lupa.png" alt="Ícone de busca">
-        <form action="">
-            <input type="text" placeholder="Buscar produtos...">
+        
+        <form id="form-busca" action=""> 
+            
+            <input type="text" id="input-busca" name="busca" placeholder="Buscar produtos...">
+        
         </form>
     </div>
     <div class="area-dados">

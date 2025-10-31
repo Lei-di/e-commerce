@@ -211,4 +211,24 @@ document.addEventListener('DOMContentLoaded', () => {
     closeBtn.addEventListener('click', closeCart);
     overlay.addEventListener('click', closeCart);
 
+    
+    // --- 7. LÓGICA DO CAMPO DE BUSCA (NOVO) ---
+    const formBusca = document.getElementById('form-busca');
+    const inputBusca = document.getElementById('input-busca');
+
+    if (formBusca && inputBusca) {
+        formBusca.addEventListener('submit', (e) => {
+            e.preventDefault(); // Impede o envio padrão do formulário
+            
+            const termo = inputBusca.value.trim(); // Pega o valor e remove espaços extras
+            
+            if (termo) {
+                // Redireciona para a página inicial com o parâmetro de busca
+                // Ex: /e-commerce/public/?busca=vestido
+                window.location.href = `${baseURL}/?busca=${encodeURIComponent(termo)}`;
+            }
+        });
+    }
+    // --- FIM DA LÓGICA DE BUSCA ---
+
 });
