@@ -8,10 +8,10 @@
     <link rel="stylesheet" href="<?= BASE_URL ?>/css/pagina_principal.css">
     <link rel="stylesheet" href="<?= BASE_URL ?>/css/global/cabecalho.css">
     <link rel="stylesheet" href="<?= BASE_URL ?>/css/checkout.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/css/sidecart.css">
 </head>
 <body>
     <?php 
-    // CORREÇÃO AQUI: Trocado _DIR_ por __DIR__
     include __DIR__ . '/components/cabecalho.php'; 
     ?>
 
@@ -139,10 +139,11 @@
     </div>
 
     <script>
-
+        // Script original da página de checkout (com baseURL)
         const baseURL = "<?= BASE_URL ?>";
 
         document.addEventListener("DOMContentLoaded", async () => {
+            // ... (toda a lógica original do checkout.js) ...
             const orderItemsContainer = document.getElementById('order-items');
             const subtotalEl = document.getElementById('subtotal');
             const totalEl = document.getElementById('total');
@@ -239,5 +240,28 @@
             });
         });
     </script>
+
+    <div id="sidecart-overlay" class="sidecart-overlay"></div>
+    <div id="sidecart" class="sidecart">
+        <div class="sidecart-container"> 
+            <div class="sidecart-header">
+                <h1>Carrinho</h1>
+                <button id="close-cart-btn" class="close-cart-btn">&times;</button> 
+            </div>
+
+            <div id="sidecart-items" class="sidecart-items">
+                <p>Seu carrinho está vazio.</p> 
+            </div>
+
+            <div class="sidecart-footer"> 
+                <p id="sidecart-total">Tudo: <span>R$ 0,00</span></p>
+                <a href="<?= BASE_URL ?>/checkout" id="sidecart-checkout-btn" class="finalize-btn">FINALIZAR (0)</a>
+                <p class="free-shipping" style="display: none;">Elegível para o TRANSPORTE LIVRE!</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="<?= BASE_URL ?>/js/sidecart.js"></script>
+
 </body>
 </html>
