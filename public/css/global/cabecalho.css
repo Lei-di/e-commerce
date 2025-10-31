@@ -68,6 +68,7 @@
 #carrinho {
     margin-right: 60px;
     width: 23px;
+    cursor: pointer; /* <--- ALTERAÇÃO ADICIONADA AQUI */
 }
 
 /*propaganda*/
