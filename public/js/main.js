@@ -18,11 +18,9 @@ document.addEventListener("DOMContentLoaded", () => {
       <div class="produto">
         <div class="foto-produto">
           <img src="${baseURL}/assets/imagens/${p.imagem}" alt="${p.nome}">
-          {/* // <-- ALTERADO: Adicionado data-id-produto */}
           <button class="btn-comprar" data-id-produto="${p.id}">ADICIONAR AO CARRINHO</button>
         </div>
         <div class="info-produto">
-          {/* // <-- ALTERADO: Adicionado verificação para p.categoria */}
           <p>${(p.categoria || 'CATEGORIA').toUpperCase()}</p>
           <h4>${p.nome}</h4>
           <h3>R$ ${parseFloat(p.preco).toFixed(2).replace('.', ',')}</h3>
