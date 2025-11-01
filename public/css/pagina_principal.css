@@ -213,6 +213,26 @@ body {
   cursor: pointer;
 }
 
+/* ================== CSS PARA O NOVO BOTÃO DE FILTRO ================== */
+.filtro .btn-aplicar-filtros {
+    width: 100%;
+    background-color: orange;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 20px; /* Espaçamento acima do botão */
+    transition: background 0.3s ease;
+}
+
+.filtro .btn-aplicar-filtros:hover {
+    background-color: darkorange;
+}
+/* ==================================================================== */
+
 
 main{
     padding: 0 40px;

@@ -2,6 +2,48 @@ document.addEventListener("DOMContentLoaded", () => {
   const listaProdutos = document.querySelector(".lista-produtos");
   const categoryLinks = document.querySelectorAll(".category-link");
 
+  // --- NOVO: SELEÇÃO E EVENTO DO BOTÃO DE FILTRO ---
+  const btnAplicarFiltros = document.getElementById("btn-aplicar-filtros");
+  // Seleciona o H1 para atualizar o título (movido para cá)
+  const tituloH1 = document.querySelector('.area-produto h1');
+
+  if (btnAplicarFiltros) {
+      btnAplicarFiltros.addEventListener("click", () => {
+          // 1. Coletar dados dos filtros da sidebar
+          
+          // Preço
+          const minPreco = document.querySelector(".filtro .preco input[name='minimo']").value;
+          const maxPreco = document.querySelector(".filtro .preco input[name='maximo']").value;
+
+          // Categorias (Pega o valor do *primeiro* checkbox de categoria marcado)
+          // Nota: A API atual só suporta uma categoria por vez.
+          const categoriaCheckbox = document.querySelector(".filtro .opcoes input[type='checkbox']:checked");
+          const categoria = categoriaCheckbox ? categoriaCheckbox.id : null; // 'vestidos', 'blusas', etc.
+
+          // 2. Definir os parâmetros para a função filtrarProdutos
+          let params = {};
+
+          if (minPreco && maxPreco) {
+              // Prioridade 1: Filtro por preço (ignora o resto, pois a API não combina)
+              params.preco = `${minPreco}-${maxPreco}`;
+              if(tituloH1) tituloH1.textContent = `Preço entre R$${minPreco} e R$${maxPreco}`;
+
+          } else if (categoria) {
+              // Prioridade 2: Filtro por categoria
+              params.categoria = categoria;
+              // (O título será atualizado dentro de filtrarProdutos)
+          } else {
+              // Se nada for selecionado, apenas recarrega as novidades (todos)
+              params.categoria = 'novidades';
+          }
+
+          // 3. Chamar a função de filtro existente
+          filtrarProdutos(params);
+      });
+  }
+  // --- FIM DO NOVO BLOCO ---
+
+
   function renderProdutos(produtos) {
     // Verifica se o elemento onde os produtos serão listados existe
     if (!listaProdutos) {
@@ -66,28 +108,31 @@ document.addEventListener("DOMContentLoaded", () => {
   async function filtrarProdutos(params = {}) {
     let url = `${baseURL}/api/produtos`;
     
-    // NOVO: Seleciona o H1 para atualizar o título
-    const tituloH1 = document.querySelector('.area-produto h1');
+    // O H1 agora é pego fora da função
+    // const tituloH1 = document.querySelector('.area-produto h1'); // REMOVIDO DAQUI
 
-    // Se uma categoria foi passada E não é 'novidades' (que significa 'todos')
-    if (params.categoria && params.categoria !== 'novidades') {
-      // Usar a rota correta para buscar por categoria
-      url = `${baseURL}/api/produtos/categoria/${encodeURIComponent(params.categoria)}`;
-      // NOVO: Atualiza o título H1
-      if(tituloH1) tituloH1.textContent = params.categoria.charAt(0).toUpperCase() + params.categoria.slice(1);
-
-    } else if (params.busca) { // <-- MUDANÇA AQUI: Adicionado 'else if' para busca
-        url = `${baseURL}/api/produtos/buscar/${encodeURIComponent(params.busca)}`;
-        // NOVO: Atualiza o título H1
-        if(tituloH1) tituloH1.textContent = `Busca por: "${params.busca}"`;
-
-    } else if (params.preco) { // Lógica de preço mantida como estava
+    // --- LÓGICA MODIFICADA PARA PRIORIZAR O PREÇO ---
+    // Se um parâmetro de preço foi passado (pelo botão)
+    if (params.preco) {
       const [min, max] = params.preco.split('-');
       url = `${baseURL}/api/produtos/preco/${min}/${max}`;
+      // O título já foi atualizado no listener do botão
+    }
+    // Senão, se uma categoria foi passada...
+    else if (params.categoria && params.categoria !== 'novidades') {
+      url = `${baseURL}/api/produtos/categoria/${encodeURIComponent(params.categoria)}`;
+      if(tituloH1) tituloH1.textContent = params.categoria.charAt(0).toUpperCase() + params.categoria.slice(1);
+
+    } else if (params.busca) { // Lógica de busca mantida
+        url = `${baseURL}/api/produtos/buscar/${encodeURIComponent(params.busca)}`;
+        if(tituloH1) tituloH1.textContent = `Busca por: "${params.busca}"`;
+
     } else {
-        // NOVO: Garante um título padrão (caso params.categoria seja 'novidades')
+        // Garante um título padrão
         if(tituloH1) tituloH1.textContent = "Novidades";
     }
+    // --- FIM DA MODIFICAÇÃO ---
+
 
     try {
        // <-- ADICIONADO: Verifica se listaProdutos existe e mostra feedback -->

@@ -1,4 +1,4 @@
-    <!DOCTYPE html>
+<!DOCTYPE html>
     <html lang="pt-BR">
     <head>
         <meta charset="UTF-8">
@@ -63,7 +63,9 @@
                     <label><input type="checkbox" name="cor" value="Azul"> Azul</label>
                     <label><input type="checkbox" name="cor" value="Verde"> Verde</label>
                 </article>
-            </div>
+                
+                <button id="btn-aplicar-filtros" class="btn-aplicar-filtros">Aplicar Filtros</button>
+                </div>
         <div class="area-produto">
                 <h1><?= htmlspecialchars($titulo) ?></h1>
                 <div class="lista-produtos">
