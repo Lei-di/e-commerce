@@ -15,7 +15,11 @@ class HomeController {
             $produtos = Produto::getAll();
         }
 
-        // Agora, a view `pagina_principal` terá acesso às variáveis $produtos e $titulo
+        // --- LINHA NOVA ---
+        // Busca a lista de categorias para os filtros da sidebar
+        $categorias_filtro = Produto::getAllCategorias(); 
+
+        // Agora, a view `pagina_principal` terá acesso a $produtos, $titulo e $categorias_filtro
         require_once __DIR__ . '/../../views/pagina_principal.php';
     }
 }

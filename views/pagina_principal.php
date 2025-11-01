@@ -28,14 +28,19 @@
 
                 <h4 class="categoria">Categoria</h4>
                 <div class="opcoes">
-                    <p><input type="checkbox" id="vestidos"><label for="vestidos">Vestidos</label></p>
-                    <p><input type="checkbox" id="blusas"><label for="blusas">Blusas</label></p>
-                    <p><input type="checkbox" id="calcas"><label for="calcas">Calças</label></p>
-                    <p><input type="checkbox" id="blazers"><label for="blazers">Blazers</label></p>
-                    <p><input type="checkbox" id="casacos"><label for="casacos">Casacos</label></p>
+                    <?php if (isset($categorias_filtro) && !empty($categorias_filtro)): ?>
+                        <?php foreach ($categorias_filtro as $categoria): ?>
+                            <p>
+                                <input type="checkbox" id="<?= htmlspecialchars($categoria['nome']) ?>">
+                                <label for="<?= htmlspecialchars($categoria['nome']) ?>">
+                                    <?= htmlspecialchars($categoria['nome']) ?>
+                                </label>
+                            </p>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <p>Nenhuma categoria encontrada.</p>
+                    <?php endif; ?>
                 </div>
-
-
                 <h4>Faixa de preço</h4><br>
                 <article class="preco">
                     <label><input type="number" name="minimo" value="" placeholder="Min.."></label>

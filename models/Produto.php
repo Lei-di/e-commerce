@@ -193,4 +193,16 @@ class Produto {
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    
+    // --- NOVO MÉTODO ADICIONADO ---
+    // Busca todas as categorias para os filtros
+    public static function getAllCategorias() {
+        global $conn;
+
+        $sql = "SELECT id_categoria, nome FROM categorias ORDER BY nome";
+        
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
