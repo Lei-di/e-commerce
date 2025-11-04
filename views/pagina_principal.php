@@ -16,8 +16,8 @@
             <img src="<?= BASE_URL ?>/assets/imagens/propaganda.jpg" alt="Propaganda de nova coleção">
             <div class="conteudo-propaganda">
                 <h1>NOVA COLEÇÃO</h1>
-                <h3>Descubra as últimas tendências da moda feminina</h3>
-                <a class="botao-colecao" href="<?= BASE_URL ?>/?categoria=feminino">Explorar Coleção</a>
+                <h3>Descubra as últimas tendências da moda</h3>
+                <a class="botao-colecao" href="<?= BASE_URL ?>/?categoria=novidades">Explorar Coleção</a>
             </div>
         </section>
 
