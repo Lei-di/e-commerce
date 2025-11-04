@@ -157,8 +157,8 @@
                 <input type="text" id="numero-novo" required style="width: 100%; padding: 8px;">
             </div>
 
-            <button type="submit" class="btn-primary" style="background: #000; color: #fff; border: 0; padding: 10px 15px; cursor: pointer; border-radius: 8px;">Salvar Endereço</button>
-            <button type="button" id="btn-cancelar-endereco" style="background: none; border: 1px solid #ccc; padding: 10px 15px; cursor: pointer; border-radius: 8px;">Cancelar</button>
+            <button type="submit" class="btn-primary" style="background: #f1960cff; color: #fff; border: 0; padding: 10px 15px; cursor: pointer; border-radius: 8px;">Salvar Endereço</button>
+            <button type="button" id="btn-cancelar-endereco" style="background: #baa078ff; border: 1px solid #ffffffff; padding: 10px 15px; cursor: pointer; border-radius: 8px;">Cancelar</button>
         </form>
     </div>
                             </div>
