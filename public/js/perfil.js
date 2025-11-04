@@ -23,6 +23,14 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Preencher a lista de desejos com placeholders
     function populateWishlistPlaceholders(count) {
+        
+        // -------- INÍCIO DA CORREÇÃO --------
+        // Se o elemento não existir, não faça nada e evite o erro
+        if (!wishlistGridSidebar) {
+            return; 
+        }
+        // -------- FIM DA CORREÇÃO --------
+
         for (let i = 0; i < count; i++) {
             const placeholder = document.createElement("div");
             placeholder.classList.add("wishlist-item-placeholder");
@@ -32,6 +40,73 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Inicializar a página
     showTab("meu-perfil"); // Mostrar a aba Meu Perfil por padrão
-    populateWishlistPlaceholders(6); // Preencher 6 placeholders na lista de desejos da sidebar
-});
+    populateWishlistPlaceholders(6); // Esta chamada agora é segura
+    
+    
+    // --- LÓGICA PARA ADICIONAR ENDEREÇO ---
+    // (Agora o script vai conseguir ler este código)
 
+    // 1. Seleciona os elementos do DOM
+    const btnNovoEndereco = document.getElementById("btn-novo-endereco");
+    const formNovoEndereco = document.getElementById("form-novo-endereco");
+    const btnCancelarEndereco = document.getElementById("btn-cancelar-endereco");
+    const formSalvarEndereco = document.getElementById("form-salvar-endereco");
+
+    // 2. Verifica se os elementos existem na página antes de adicionar eventos
+    if (btnNovoEndereco && formNovoEndereco && btnCancelarEndereco && formSalvarEndereco) {
+
+        // 3. Evento para MOSTRAR o formulário
+        btnNovoEndereco.addEventListener("click", () => {
+            formNovoEndereco.style.display = "block"; // Mostra o formulário
+            btnNovoEndereco.style.display = "none";  // Esconde o botão "Adicionar"
+        });
+
+        // 4. Evento para ESCONDER o formulário (no botão Cancelar)
+        btnCancelarEndereco.addEventListener("click", () => {
+            formNovoEndereco.style.display = "none";  // Esconde o formulário
+            btnNovoEndereco.style.display = "block"; // Mostra o botão "Adicionar" de volta
+        });
+
+        // 5. Evento para "Salvar" o formulário
+        formSalvarEndereco.addEventListener("submit", async (e) => {
+            e.preventDefault(); // Impede o recarregamento da página
+
+            // Pega os dados do formulário
+            const apelido = document.getElementById("apelido").value;
+            const cep = document.getElementById("cep-novo").value;
+            const rua = document.getElementById("rua-nova").value;
+            const numero = document.getElementById("numero-novo").value;
+
+            // Feedback visual temporário (simulação)
+            alert("Salvando endereço... (Simulação de Front-End)");
+
+            // --- PONTO IMPORTANTE PARA O BACKEND ---
+            // Aqui é onde você chamaria a API do backend:
+            /*
+            try {
+                const response = await fetch(`${baseURL}/api/endereco/adicionar`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ apelido, cep, rua, numero })
+                });
+
+                const resultado = await response.json();
+
+                if (response.ok) {
+                    alert("Endereço salvo com sucesso!");
+                    // Aqui você deveria recarregar a lista de endereços ou adicionar o novo dinamicamente
+                    formNovoEndereco.style.display = "none";  // Esconde o formulário
+                    btnNovoEndereco.style.display = "block"; // Mostra o botão "Adicionar"
+                } else {
+                    alert("Erro ao salvar: " + resultado.erro);
+                }
+            } catch (error) {
+                console.error("Erro na API:", error);
+                alert("Erro grave ao tentar salvar endereço.");
+            }
+            */
+            // --- FIM DA PARTE DO BACKEND ---
+        });
+    }
+    // --- FIM DA LÓGICA DE ENDEREÇO ---        
+});
