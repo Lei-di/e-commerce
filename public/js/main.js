@@ -2,12 +2,25 @@ document.addEventListener("DOMContentLoaded", () => {
   const listaProdutos = document.querySelector(".lista-produtos");
   const categoryLinks = document.querySelectorAll(".category-link");
 
-  // --- NOVO: rolar para a seção de produtos quando trocar de categoria ---
+  // --- NOVO: rolar para a seção de produtos quando trocar de categoria/buscar/aplicar filtros ---
   const areaProduto = document.querySelector('.area-produto');
   function scrollToProdutos() {
     if (areaProduto) {
       areaProduto.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
+  }
+
+  // --- NOVO: captura do formulário de busca do cabeçalho ---
+  const formBusca = document.getElementById('form-busca');
+  const inputBusca = document.getElementById('input-busca');
+  if (formBusca && inputBusca) {
+    formBusca.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const termo = (inputBusca.value || '').trim();
+      if (termo.length === 0) return;
+      filtrarProdutos({ busca: termo });
+      scrollToProdutos();
+    });
   }
 
   // --- NOVO: SELEÇÃO E EVENTO DO BOTÃO DE FILTRO ---
@@ -184,6 +197,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (termoBusca) {
       // Se houver um termo de busca, filtra por ele
       filtrarProdutos({ busca: termoBusca });
+      scrollToProdutos();
   } else {
       // Senão, usa a lógica de categoria que já existia
       // (Isso também atualiza o título H1 inicial corretamente)
