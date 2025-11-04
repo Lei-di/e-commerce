@@ -170,17 +170,26 @@ body {
 
 /*area do filtro*/
 
-.filtro{
-    padding: 0 20px;
+.filtro {
+    padding: 20px; /* Define um respiro de 20px em todos os lados */
     width: 350px;
-    height: 600px;
-    border: 1px solid black;
+    /* height: 600px; <-- REMOVIDO! Isso corrige a altura total */
+    border: 2px solid rgb(185, 185, 185);
     border-radius: 10px;
     margin-right: 10px;
+    margin-top: 75px; /* Mantém sua regra para descer a caixa */
 }
 
-.filtro h4{
-    margin-bottom: 0;
+/* Adiciona esta nova regra para o título "Filtros" */
+.filtro h3 {
+    margin-top: 0; /* Remove o espaço de cima */
+    margin-bottom: 10px; /* Define um espaço pequeno abaixo dele */
+}
+
+/* Modifica a regra do h4 para controlar o espaço entre as seções */
+.filtro h4 { 
+    margin-bottom: 2px; /* Adiciona um pequeno espaço para o conteúdo abaixo */
+    margin-top: 20px; /* Espaço ACIMA de "Categoria", "Faixa de preço", etc. */
 }
 
 
@@ -209,7 +218,7 @@ body {
 .filtro .tamanho label {
   display: flex;
   align-items: center;
-  gap: 5px; /* espaço entre checkbox e texto */
+  gap: 0px; /* espaço entre checkbox e texto */
   cursor: pointer;
 }
 
@@ -224,7 +233,7 @@ body {
     font-size: 1rem;
     font-weight: bold;
     cursor: pointer;
-    margin-top: 20px; /* Espaçamento acima do botão */
+    margin-top: 15px; /* <-- DIMINUÍDO PARA JUNTAR OS TEXTOS */
     transition: background 0.3s ease;
 }
 
@@ -237,6 +246,7 @@ body {
 main{
     padding: 0 40px;
     display: flex;
+    align-items: flex-start;    
 }
 
 

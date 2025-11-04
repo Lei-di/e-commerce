@@ -108,5 +108,75 @@ document.addEventListener("DOMContentLoaded", function() {
             // --- FIM DA PARTE DO BACKEND ---
         });
     }
-    // --- FIM DA LÓGICA DE ENDEREÇO ---        
+        // --- FIM DA LÓGICA DE ENDEREÇO ---
+        
+        // --- LÓGICA PARA EDITAR PERFIL ---
+
+    // 1. Seleciona os novos elementos
+    const btnEditarPerfil = document.getElementById("btn-editar-perfil");
+    const btnCancelarEdicao = document.getElementById("btn-cancelar-edicao");
+    const dadosView = document.getElementById("dados-view");
+    const dadosEdit = document.getElementById("dados-edit");
+    const formSalvarPerfil = document.getElementById("form-salvar-perfil");
+
+    // 2. Verifica se os elementos existem
+    if (btnEditarPerfil && btnCancelarEdicao && dadosView && dadosEdit && formSalvarPerfil) {
+
+        // 3. Evento para ENTRAR no modo de edição
+        btnEditarPerfil.addEventListener("click", () => {
+            // Esconde a visualização e mostra a edição
+            dadosView.style.display = "none";
+            dadosEdit.style.display = "block";
+
+            // Futuramente: pré-carregar os campos com dados reais
+            // document.getElementById("nome-edit").value = dadosReais.nome;
+        });
+
+        // 4. Evento para SAIR do modo de edição (Cancelando)
+        btnCancelarEdicao.addEventListener("click", () => {
+            // Esconde a edição e mostra a visualização
+            dadosEdit.style.display = "none";
+            dadosView.style.display = "block";
+        });
+
+        // 5. Evento para SALVAR os dados
+        formSalvarPerfil.addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            // Pega os dados dos campos
+            const nome = document.getElementById("nome-edit").value;
+            const telefone = document.getElementById("telefone-edit").value;
+            const email = document.getElementById("email-edit").value;
+            const nascimento = document.getElementById("nasc-edit").value;
+
+            alert("Simulação de Front-End: Salvando dados...");
+
+            // --- TAREFA DO BACKEND ---
+            // O código real faria um fetch para a API
+            /*
+            try {
+                const response = await fetch(`${baseURL}/api/usuario/atualizar`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nome, telefone, email, nascimento })
+                });
+
+                if (response.ok) {
+                    alert("Dados atualizados com sucesso!");
+                    // Aqui você atualizaria os <p> do modo-view com os novos dados
+                    // E voltaria para o modo de visualização
+                    dadosEdit.style.display = "none";
+                    dadosView.style.display = "block";
+                } else {
+                    alert("Erro ao atualizar dados.");
+                }
+            } catch (error) {
+                console.error("Erro na API:", error);
+                alert("Erro grave ao tentar salvar.");
+            }
+            */
+            // --- FIM DA TAREFA DO BACKEND ---
+        });
+    }
+    // --- FIM DA LÓGICA DE EDITAR PERFIL ---
 });

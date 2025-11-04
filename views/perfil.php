@@ -100,29 +100,55 @@
                 <div id="meu-perfil" class="tab-content active">
                     <h3>MEU PERFIL</h3>
                     <p>Informações do seu perfil.</p>
-                    <div class="conteudo-perfil">
-                        <div class="conteudo-perfil">
-                            <div class="conteudo-perfil-dados">
+                        <div class="conteudo-perfil-dados">
+
+                            <div id="dados-view">
                                 <div class="info-perfil">
                                     <h4>Nome Completo:</h4>
                                     <p>João da Silva</p>
                                 </div>
-
                                 <div class="info-perfil">
                                     <h4>Telefones:</h4>
                                     <p>11 98765-4321</p>
                                 </div>
-
                                 <div class="info-perfil">
                                     <h4>E-mail:</h4>
                                     <p>joao.silva@email.com</p>
                                 </div>
-
                                 <div class="info-perfil">
                                     <h4>Data de Nascimento:</h4>
                                     <p>15/08/1990</p>
                                 </div>
+                                <button id="btn-editar-perfil" class="btn-primary" style="margin-top: 15px;">
+                                    Editar Dados
+                                </button>
+                                </div>
+
+                            <div id="dados-edit" style="display: none;">
+                                <form id="form-salvar-perfil">
+                                    <div class="form-group" style="margin-bottom: 15px;">
+                                        <label for="nome-edit" style="display: block; margin-bottom: 5px;">Nome Completo *</label>
+                                        <input type="text" id="nome-edit" value="João da Silva" required style="width: 100%; padding: 8px;">
+                                    </div>
+                                    <div class="form-group" style="margin-bottom: 15px;">
+                                        <label for="telefone-edit" style="display: block; margin-bottom: 5px;">Telefone *</label>
+                                        <input type="tel" id="telefone-edit" value="11 98765-4321" required style="width: 100%; padding: 8px;">
+                                    </div>
+                                    <div class="form-group" style="margin-bottom: 15px;">
+                                        <label for="email-edit" style="display: block; margin-bottom: 5px;">E-mail *</label>
+                                        <input type="email" id="email-edit" value="joao.silva@email.com" required style="width: 100%; padding: 8px;">
+                                    </div>
+                                    <div class="form-group" style="margin-bottom: 15px;">
+                                        <label for="nasc-edit" style="display: block; margin-bottom: 5px;">Data de Nascimento *</label>
+                                        <input type="text" id="nasc-edit" value="15/08/1990" required style="width: 100%; padding: 8px;">
+                                    </div>
+
+                                    <button type="submit" class="btn-primary" style="background: #000; color: #fff; border: 0; padding: 10px 15px; cursor: pointer; border-radius: 8px;">Salvar Alterações</button>
+                                    <button type="button" id="btn-cancelar-edicao" style="background: none; border: 1px solid #ccc; padding: 10px 15px; cursor: pointer; border-radius: 8px;">Cancelar</button>
+                                </form>
                             </div>
+
+                        </div>
 
                             <div class="enderecos">
                                 <h4 style="margin-top: 20px !important;">Endereços:</h4>
@@ -135,32 +161,32 @@
                                 <button id="btn-novo-endereco">ADICIONAR MAIS UM ENDEREÇO</button>
 
                                 <div id="form-novo-endereco" style="display: none; background-color: #f0f0f0; padding: 20px; border-radius: 8px; margin-top: 20px;">
-        <h4>Novo Endereço</h4>
-        <form id="form-salvar-endereco">
-            <div class="form-group" style="margin-bottom: 15px;">
-                <label for="apelido" style="display: block; margin-bottom: 5px;">Apelido (ex: Casa, Trabalho)*</label>
-                <input type="text" id="apelido" required style="width: 100%; padding: 8px;">
-            </div>
+                                <h4>Novo Endereço</h4>
+                                <form id="form-salvar-endereco">
+                                    <div class="form-group" style="margin-bottom: 15px;">
+                                        <label for="apelido" style="display: block; margin-bottom: 5px;">Apelido (ex: Casa, Trabalho)*</label>
+                                        <input type="text" id="apelido" required style="width: 100%; padding: 8px;">
+                                    </div>
 
-            <div class="form-group" style="margin-bottom: 15px;">
-                <label for="cep-novo" style="display: block; margin-bottom: 5px;">CEP *</label>
-                <input type="text" id="cep-novo" required style="width: 100%; padding: 8px;">
-            </div>
+                                    <div class="form-group" style="margin-bottom: 15px;">
+                                        <label for="cep-novo" style="display: block; margin-bottom: 5px;">CEP *</label>
+                                        <input type="text" id="cep-novo" required style="width: 100%; padding: 8px;">
+                                    </div>
 
-            <div class="form-group" style="margin-bottom: 15px;">
-                <label for="rua-nova" style="display: block; margin-bottom: 5px;">Rua *</label>
-                <input type="text" id="rua-nova" required style="width: 100%; padding: 8px;">
-            </div>
+                                    <div class="form-group" style="margin-bottom: 15px;">
+                                        <label for="rua-nova" style="display: block; margin-bottom: 5px;">Rua *</label>
+                                        <input type="text" id="rua-nova" required style="width: 100%; padding: 8px;">
+                                    </div>
 
-            <div class="form-group" style="margin-bottom: 15px;">
-                <label for="numero-novo" style="display: block; margin-bottom: 5px;">Número *</label>
-                <input type="text" id="numero-novo" required style="width: 100%; padding: 8px;">
-            </div>
+                                    <div class="form-group" style="margin-bottom: 15px;">
+                                        <label for="numero-novo" style="display: block; margin-bottom: 5px;">Número *</label>
+                                        <input type="text" id="numero-novo" required style="width: 100%; padding: 8px;">
+                                    </div>
 
-            <button type="submit" class="btn-primary" style="background: #f1960cff; color: #fff; border: 0; padding: 10px 15px; cursor: pointer; border-radius: 8px;">Salvar Endereço</button>
-            <button type="button" id="btn-cancelar-endereco" style="background: #baa078ff; border: 1px solid #ffffffff; padding: 10px 15px; cursor: pointer; border-radius: 8px;">Cancelar</button>
-        </form>
-    </div>
+                                    <button type="submit" class="btn-primary" style="background: #f1960cff; color: #fff; border: 0; padding: 10px 15px; cursor: pointer; border-radius: 8px;">Salvar Endereço</button>
+                                    <button type="button" id="btn-cancelar-endereco" style="background: #baa078ff; border: 1px solid #ffffffff; padding: 10px 15px; cursor: pointer; border-radius: 8px;">Cancelar</button>
+                                </form>
+                            </div>
                             </div>
 
                         </div>
