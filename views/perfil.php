@@ -146,7 +146,7 @@
 
             <div id="opcoes-pagamento" class="tab-content">
                 <h3>OPÇÕES DE PAGAMENTO</h3>
-                <p>Selecione uma forma de pagamento preferida (simulação):</p>
+                <p>Selecione uma forma de pagamento preferida:</p>
                 
                 <div class="payment-methods">
                     <label class="payment-card">
