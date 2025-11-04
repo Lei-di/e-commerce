@@ -151,15 +151,29 @@
                 <div class="payment-methods">
                     <label class="payment-card">
                         <div class="payment-left">
-                            <input type="radio" name="payment" value="cartao" checked>
-                            <img src="<?= BASE_URL ?>/assets/icones/cartao.png" alt="Cartão" onerror="this.style.display='none'">
+                            <input type="radio" name="payment" value="credito" checked>
+                            <img src="<?= BASE_URL ?>/assets/icones/credito.png" alt="Crédito" onerror="this.style.display='none'">
                             <div class="payment-info">
                                 <strong>Cartão de Crédito</strong>
                                 <div class="saved-badge">Visa, Mastercard, Elo</div>
                             </div>
                         </div>
                         <div class="payment-actions">
-                            <button class="btn-outline" type="button" onclick="alert('Função de editar cartão (simulação)')">Editar</button>
+                            <button class="btn-outline" type="button" onclick="alert('Função de editar cartão de crédito (simulação)')">Editar</button>
+                        </div>
+                    </label>
+
+                    <label class="payment-card">
+                        <div class="payment-left">
+                            <input type="radio" name="payment" value="debito">
+                            <img src="<?= BASE_URL ?>/assets/icones/debito.png" alt="Débito" onerror="this.style.display='none'">
+                            <div class="payment-info">
+                                <strong>Cartão de Débito</strong>
+                                <div class="saved-badge">Desconto direto na conta</div>
+                            </div>
+                        </div>
+                        <div class="payment-actions">
+                            <button class="btn-outline" type="button" onclick="alert('Função de editar cartão de débito (simulação)')">Editar</button>
                         </div>
                     </label>
 
@@ -174,20 +188,6 @@
                         </div>
                         <div class="payment-actions">
                             <button class="btn-outline" type="button" onclick="alert('Instruções Pix:\n1. Será gerado QR Code\n2. Ou chave aleatória\n3. Pagamento instantâneo')">Instruções</button>
-                        </div>
-                    </label>
-
-                    <label class="payment-card">
-                        <div class="payment-left">
-                            <input type="radio" name="payment" value="boleto">
-                            <img src="<?= BASE_URL ?>/assets/icones/boleto.png" alt="Boleto" onerror="this.style.display='none'">
-                            <div class="payment-info">
-                                <strong>Boleto Bancário</strong>
-                                <div class="saved-badge">Vencimento em 3 dias úteis</div>
-                            </div>
-                        </div>
-                        <div class="payment-actions">
-                            <button class="btn-outline" type="button" onclick="alert('Boleto será gerado após a compra para download')">Baixar após compra</button>
                         </div>
                     </label>
 
@@ -233,14 +233,14 @@
                 let message = '';
                 
                 switch(paymentType) {
-                    case 'cartao':
+                    case 'credito':
                         message = 'Cartão de Crédito salvo como preferência!';
+                        break;
+                    case 'debito':
+                        message = 'Cartão de Débito salvo como preferência!';
                         break;
                     case 'pix':
                         message = 'Pix salvo como preferência!';
-                        break;
-                    case 'boleto':
-                        message = 'Boleto Bancário salvo como preferência!';
                         break;
                 }
                 
