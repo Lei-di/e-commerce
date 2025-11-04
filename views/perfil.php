@@ -244,7 +244,7 @@
                         break;
                 }
                 
-                alert(message + '\n(Esta é uma simulação)');
+        
             }
         }
     </script>
