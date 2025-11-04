@@ -2,6 +2,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const listaProdutos = document.querySelector(".lista-produtos");
   const categoryLinks = document.querySelectorAll(".category-link");
 
+  // --- NOVO: rolar para a seção de produtos quando trocar de categoria ---
+  const areaProduto = document.querySelector('.area-produto');
+  function scrollToProdutos() {
+    if (areaProduto) {
+      areaProduto.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
   // --- NOVO: SELEÇÃO E EVENTO DO BOTÃO DE FILTRO ---
   const btnAplicarFiltros = document.getElementById("btn-aplicar-filtros");
   // Seleciona o H1 para atualizar o título (movido para cá)
@@ -39,6 +47,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
           // 3. Chamar a função de filtro existente
           filtrarProdutos(params);
+          // --- NOVO: rola para a seção de produtos ---
+          scrollToProdutos();
       });
   }
   // --- FIM DO NOVO BLOCO ---
@@ -159,6 +169,8 @@ document.addEventListener("DOMContentLoaded", () => {
       const category = link.dataset.category;
       // <-- A atualização do H1 agora é feita dentro de filtrarProdutos -->
       filtrarProdutos({ categoria: category });
+      // --- NOVO: rola para a seção de produtos ---
+      scrollToProdutos();
     });
   });
 
@@ -176,6 +188,10 @@ document.addEventListener("DOMContentLoaded", () => {
       // Senão, usa a lógica de categoria que já existia
       // (Isso também atualiza o título H1 inicial corretamente)
       filtrarProdutos({ categoria: categoriaInicial });
+      // --- NOVO: rola para a seção de produtos ao carregar vindo de um link de categoria ---
+      if (categoriaInicial && categoriaInicial !== 'novidades') {
+        scrollToProdutos();
+      }
   }
   // --- FIM DO CARREGAMENTO INICIAL --- //
 
