@@ -169,7 +169,7 @@
                             <img src="<?= BASE_URL ?>/assets/icones/debito.png" alt="Débito" onerror="this.style.display='none'">
                             <div class="payment-info">
                                 <strong>Cartão de Débito</strong>
-                                <div class="saved-badge">Desconto direto na conta</div>
+                                <div class="saved-badge">Visa, Mastercard, Elo</div>
                             </div>
                         </div>
                         <div class="payment-actions">
