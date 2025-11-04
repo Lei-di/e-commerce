@@ -23,12 +23,6 @@
                     </ul>
                 </nav>
             </aside>
-            <div class="wishlist-section">
-                <h2>LISTA DE DESEJOS</h2>
-                <div class="wishlist-grid-sidebar">
-                </div>
-                <a href="#" class="mais-link">+ MAIS</a>
-            </div>
         </div>
 
         <section class="profile-content-area">
