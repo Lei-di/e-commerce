@@ -7,6 +7,77 @@
     <link rel="stylesheet" href="<?= BASE_URL ?>/css/perfil.css">
     <link rel="stylesheet" href="<?= BASE_URL ?>/css/global/cabecalho.css">
     <link rel="stylesheet" href="<?= BASE_URL ?>/css/sidecart.css">
+    <style>
+        /* Estilos para as formas de pagamento */
+        .payment-methods { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 16px; 
+            margin-top: 12px; 
+        }
+        .payment-card { 
+            border: 1px solid #eee; 
+            border-radius: 10px; 
+            padding: 16px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+        .payment-card:hover {
+            border-color: #ccc;
+        }
+        .payment-card input[type="radio"]:checked + .payment-info {
+            color: #000;
+        }
+        .payment-left { 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+        }
+        .payment-left img { 
+            width: 40px; 
+            height: 26px; 
+            object-fit: contain; 
+        }
+        .payment-actions { 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+        }
+        .btn-outline { 
+            background: #fff; 
+            border: 1px solid #ccc; 
+            border-radius: 8px; 
+            padding: 6px 10px; 
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .btn-outline:hover {
+            background: #f5f5f5;
+        }
+        .btn-primary { 
+            background: #000; 
+            color: #fff; 
+            border: 0; 
+            border-radius: 8px; 
+            padding: 8px 14px; 
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .btn-primary:hover {
+            background: #333;
+        }
+        .saved-badge { 
+            font-size: 12px; 
+            color: #888; 
+            margin-top: 2px;
+        }
+        .payment-info {
+            flex: 1;
+        }
+    </style>
 </head>
 <body>
     <?php include __DIR__ . '/components/cabecalho.php'; ?>
@@ -67,6 +138,7 @@
                     </div>
                 </div>
             </div>
+            
             <div id="meus-pedidos" class="tab-content">
                 <h3>MEUS PEDIDOS</h3>
                 <p>Nenhum pedido encontrado.</p>
@@ -74,7 +146,55 @@
 
             <div id="opcoes-pagamento" class="tab-content">
                 <h3>OPÇÕES DE PAGAMENTO</h3>
-                <p>Nenhuma opção de pagamento cadastrada.</p>
+                <p>Selecione uma forma de pagamento preferida (simulação):</p>
+                
+                <div class="payment-methods">
+                    <label class="payment-card">
+                        <div class="payment-left">
+                            <input type="radio" name="payment" value="cartao" checked>
+                            <img src="<?= BASE_URL ?>/assets/icones/cartao.png" alt="Cartão" onerror="this.style.display='none'">
+                            <div class="payment-info">
+                                <strong>Cartão de Crédito</strong>
+                                <div class="saved-badge">Visa, Mastercard, Elo</div>
+                            </div>
+                        </div>
+                        <div class="payment-actions">
+                            <button class="btn-outline" type="button" onclick="alert('Função de editar cartão (simulação)')">Editar</button>
+                        </div>
+                    </label>
+
+                    <label class="payment-card">
+                        <div class="payment-left">
+                            <input type="radio" name="payment" value="pix">
+                            <img src="<?= BASE_URL ?>/assets/icones/pix.png" alt="Pix" onerror="this.style.display='none'">
+                            <div class="payment-info">
+                                <strong>Pix</strong>
+                                <div class="saved-badge">Chave aleatória será gerada no checkout</div>
+                            </div>
+                        </div>
+                        <div class="payment-actions">
+                            <button class="btn-outline" type="button" onclick="alert('Instruções Pix:\n1. Será gerado QR Code\n2. Ou chave aleatória\n3. Pagamento instantâneo')">Instruções</button>
+                        </div>
+                    </label>
+
+                    <label class="payment-card">
+                        <div class="payment-left">
+                            <input type="radio" name="payment" value="boleto">
+                            <img src="<?= BASE_URL ?>/assets/icones/boleto.png" alt="Boleto" onerror="this.style.display='none'">
+                            <div class="payment-info">
+                                <strong>Boleto Bancário</strong>
+                                <div class="saved-badge">Vencimento em 3 dias úteis</div>
+                            </div>
+                        </div>
+                        <div class="payment-actions">
+                            <button class="btn-outline" type="button" onclick="alert('Boleto será gerado após a compra para download')">Baixar após compra</button>
+                        </div>
+                    </label>
+
+                    <div style="margin-top: 20px;">
+                        <button class="btn-primary" type="button" onclick="salvarPreferenciaPagamento()">Salvar Preferência</button>
+                    </div>
+                </div>
             </div>
         </section>
     </main>
@@ -104,6 +224,29 @@
     <script>
         // Passa a URL base do PHP para o JavaScript
         const baseURL = "<?= BASE_URL ?>";
+        
+        // Função para salvar preferência de pagamento (simulação)
+        function salvarPreferenciaPagamento() {
+            const selectedPayment = document.querySelector('input[name="payment"]:checked');
+            if (selectedPayment) {
+                const paymentType = selectedPayment.value;
+                let message = '';
+                
+                switch(paymentType) {
+                    case 'cartao':
+                        message = 'Cartão de Crédito salvo como preferência!';
+                        break;
+                    case 'pix':
+                        message = 'Pix salvo como preferência!';
+                        break;
+                    case 'boleto':
+                        message = 'Boleto Bancário salvo como preferência!';
+                        break;
+                }
+                
+                alert(message + '\n(Esta é uma simulação)');
+            }
+        }
     </script>
     <script src="<?= BASE_URL ?>/js/sidecart.js"></script>
 
