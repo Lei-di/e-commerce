@@ -40,8 +40,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const response = await fetch(`${baseURL}/api/carrinho/adicionar`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
-                    produto_id: produtoId, 
+                body: JSON.stringify({
+                    produto_id: produtoId,
                     quantidade: 1,
                     tamanho: tamanho // Envia o tamanho
                 })
@@ -68,9 +68,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const response = await fetch(`${baseURL}/api/carrinho/atualizar`, {
                 method: 'PUT', // O backend espera PUT
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
+                body: JSON.stringify({
                     cart_item_id: cartItemId, // Usa a chave única
-                    quantidade: novaQuantidade 
+                    quantidade: novaQuantidade
                 })
             });
             const result = await response.json();
@@ -112,18 +112,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const data = await response.json();
             const carrinho = data.carrinho; // A API agora retorna { carrinho: { ... } }
-            
+
             itemsContainer.innerHTML = ''; // Limpa o "Carregando..."
 
             if (!carrinho || !carrinho.itens || carrinho.itens.length === 0) {
                 itemsContainer.innerHTML = '<p>Seu carrinho está vazio.</p>';
                 totalContainer.querySelector('span').textContent = 'R$ 0,00';
                 checkoutBtn.textContent = 'FINALIZAR (0)'; // Atualiza o botão
-                checkoutBtn.style.display = 'block'; 
+                checkoutBtn.style.display = 'block';
                 checkoutBtn.href = '#'; // Impede de ir pro checkout vazio
-                if(freeShippingMsg) freeShippingMsg.style.display = 'none'; // Esconde frete grátis
+                if (freeShippingMsg) freeShippingMsg.style.display = 'none'; // Esconde frete grátis
             } else {
-                
+
                 carrinho.itens.forEach(item => {
                     // --- ADICIONADO: Exibe o tamanho se ele existir ---
                     const tamanhoHtml = item.tamanho ? `<p class="item-tamanho" style="font-size: 0.9em; color: #555;">Tamanho: <strong>${item.tamanho}</strong></p>` : '';
@@ -152,10 +152,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 checkoutBtn.style.display = 'block';
                 checkoutBtn.href = `${baseURL}/checkout`; // Link correto
 
-                 // Mostra frete grátis (exemplo de condição)
-                if (carrinho.totalPreco > 100 && freeShippingMsg) { 
+                // Mostra frete grátis (exemplo de condição)
+                if (carrinho.totalPreco > 100 && freeShippingMsg) {
                     freeShippingMsg.style.display = 'block';
-                } else if(freeShippingMsg) {
+                } else if (freeShippingMsg) {
                     freeShippingMsg.style.display = 'none';
                 }
 
@@ -215,30 +215,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 6. Eventos Principais (Abrir/Fechar) ---
     if (cartIcon) {
-      cartIcon.addEventListener('click', (e) => {
-          e.preventDefault(); 
-          openCart();
-      });
+        cartIcon.addEventListener('click', (e) => {
+            e.preventDefault();
+            openCart();
+        });
     }
     if (closeBtn) closeBtn.addEventListener('click', closeCart);
     if (overlay) overlay.addEventListener('click', closeCart);
-    
-    // --- 7. LÓGICA DO CAMPO DE BUSCA (Mantida) ---
-    const formBusca = document.getElementById('form-busca');
-    const inputBusca = document.getElementById('input-busca');
 
-    if (formBusca && inputBusca) {
-        formBusca.addEventListener('submit', (e) => {
-            e.preventDefault(); 
-            const termo = inputBusca.value.trim(); 
-            if (termo) {
-                window.location.href = `${baseURL}/?busca=${encodeURIComponent(termo)}`;
-            }
-        });
-    }
-    
+
     // --- 8. CARREGAMENTO INICIAL ---
     // Atualiza a visualização do carrinho ao carregar a página (sem abrir)
-    updateCartView(); 
+    updateCartView();
 
 });
