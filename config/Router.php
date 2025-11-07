@@ -35,6 +35,11 @@ class Router {
                 (new PerfilController())->index();
                 break;
 
+            // ROTA ADICIONADA PARA ATUALIZAR O PERFIL
+            case $method === 'POST' && $path === '/perfil/atualizar':
+                (new PerfilController())->atualizar();
+                break;
+
             case $path === '/checkout':
                 (new CheckoutController())->index();
                 break;

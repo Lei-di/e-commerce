@@ -126,4 +126,98 @@ class Usuario {
             return false;
         }
     }
+
+    /**
+     * Busca dados completos de um cliente (perfil) pelo ID.
+     * @param int $idCliente
+     * @return array|false
+     */
+    public static function getById($idCliente) {
+        global $conn;
+        try {
+            // 1. Buscar dados do cliente
+            $sqlCliente = "SELECT id_cliente, nome, email, telefone, cpf 
+                           FROM clientes 
+                           WHERE id_cliente = :id LIMIT 1";
+            $stmtCliente = $conn->prepare($sqlCliente);
+            $stmtCliente->bindParam(':id', $idCliente, PDO::PARAM_INT);
+            $stmtCliente->execute();
+            $usuario = $stmtCliente->fetch(PDO::FETCH_ASSOC);
+
+            if (!$usuario) {
+                return false; // Usuário não encontrado
+            }
+
+            // 2. Buscar endereços do cliente
+            $sqlEnderecos = "SELECT logradouro, numero, complemento, bairro, cidade, estado, cep 
+                             FROM enderecos 
+                             WHERE id_cliente = :id";
+            $stmtEnderecos = $conn->prepare($sqlEnderecos);
+            $stmtEnderecos->bindParam(':id', $idCliente, PDO::PARAM_INT);
+            $stmtEnderecos->execute();
+            $enderecos = $stmtEnderecos->fetchAll(PDO::FETCH_ASSOC);
+
+            // 3. Adicionar os endereços ao array do usuário
+            $usuario['enderecos'] = $enderecos;
+
+            return $usuario;
+
+        } catch (Exception $e) {
+            error_log($e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Atualiza os dados de perfil de um cliente.
+     * @param int $idCliente
+     * @param array $dados Os dados a serem atualizados (nome, email, telefone, etc.)
+     * @return bool True se a atualização for bem-sucedida, false caso contrário.
+     */
+    public static function atualizarPerfil($idCliente, $dados) {
+        global $conn;
+
+        try {
+            $sql = "UPDATE clientes SET ";
+            $campos = [];
+            $parametros = [':id_cliente' => $idCliente];
+
+            if (isset($dados['nome'])) {
+                $campos[] = "nome = :nome";
+                $parametros[':nome'] = $dados['nome'];
+            }
+            if (isset($dados['email'])) {
+                // Opcional: Verificar se o novo email já existe para outro usuário
+                // $existingUser = self::getByEmail($dados['email']);
+                // if ($existingUser && $existingUser['id_cliente'] != $idCliente) {
+                //     throw new Exception("Este e-mail já está em uso por outro usuário.");
+                // }
+                $campos[] = "email = :email";
+                $parametros[':email'] = $dados['email'];
+            }
+            if (isset($dados['telefone'])) {
+                $campos[] = "telefone = :telefone";
+                $parametros[':telefone'] = $dados['telefone'];
+            }
+            // Adicione outros campos que você permite atualizar aqui (ex: cpf)
+            // if (isset($dados['cpf'])) { ... }
+
+            if (empty($campos)) {
+                return false; // Nenhum dado para atualizar
+            }
+
+            $sql .= implode(", ", $campos);
+            $sql .= " WHERE id_cliente = :id_cliente";
+
+            $stmt = $conn->prepare($sql);
+            $stmt->execute($parametros);
+
+            return $stmt->rowCount() > 0; // Retorna true se alguma linha foi afetada
+
+        } catch (Exception $e) {
+            error_log("Erro no Model Usuario::atualizarPerfil: " . $e->getMessage());
+            // Lança a exceção para que o controller possa pegá-la
+            throw $e; 
+        }
+    }
 }
