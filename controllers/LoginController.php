@@ -3,9 +3,12 @@ require_once __DIR__ . '/Controller.php';
 require_once __DIR__ . '/../models/Usuario.php';
 
 class LoginController extends Controller {
+    
+    // Esta função não existe, mas o Router chama
     public function index() {
-        // Por enquanto, só mostra uma mensagem simples
-        $this->jsonResponse(["mensagem" => "Página inicial - login não implementado ainda"]);
+        // Redireciona para a página de login real
+        header('Location: ' . BASE_URL . '/login');
+        exit;
     }
 
     public function login() {
@@ -19,14 +22,19 @@ class LoginController extends Controller {
             $this->jsonError("Email e senha são obrigatórios", 400);
         }
 
+        // O Model (Usuario::validarLogin) agora faz a verificação de hash
         $usuario = Usuario::validarLogin($data['email'], $data['senha']);
 
         if ($usuario) {
-            $_SESSION['usuario_id'] = $usuario['id'];
+            // Salva o ID do cliente na sessão
+            // O seu SQL da tabela clientes mostra 'id_cliente'
+            $_SESSION['usuario_id'] = $usuario['id_cliente']; 
+            $_SESSION['usuario_nome'] = $usuario['nome'];
+            
             $this->jsonResponse([
                 "mensagem" => "Login bem-sucedido!",
                 "usuario" => [
-                    "id" => $usuario['id'],
+                    "id" => $usuario['id_cliente'],
                     "nome" => $usuario['nome'],
                     "email" => $usuario['email']
                 ]
@@ -34,5 +42,21 @@ class LoginController extends Controller {
         } else {
             $this->jsonError("Usuário ou senha inválidos", 401);
         }
+    }
+
+    /**
+     * NOVO MÉTODO: Logout
+     * Destroi a sessão e redireciona para a home.
+     */
+    public function logout() {
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
+        session_unset(); // Limpa as variáveis da sessão
+        session_destroy(); // Destroi a sessão
+        
+        // Redireciona para a página principal
+        header('Location: ' . BASE_URL . '/');
+        exit;
     }
 }

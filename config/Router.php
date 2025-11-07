@@ -2,15 +2,16 @@
 // Controllers que carregam as Views 
 require_once __DIR__ . '/../controllers/web/HomeController.php';
 require_once __DIR__ . '/../controllers/web/PerfilController.php';
-require_once __DIR__ . '/../controllers/web/CheckoutController.php'; // <-- ADICIONADO
-require_once __DIR__ . '/../controllers/web/PedidoConfirmadoController.php'; // <-- ADICIONADO
+require_once __DIR__ . '/../controllers/web/CheckoutController.php';
+require_once __DIR__ . '/../controllers/web/PedidoConfirmadoController.php';
+require_once __DIR__ . '/../controllers/web/LoginPageController.php'; // <-- ADICIONADO
+require_once __DIR__ . '/../controllers/web/RegistroController.php'; // <-- ADICIONADO
 
 // Controllers que respondem à API (JSON)
 require_once __DIR__ . '/../controllers/LoginController.php';
 require_once __DIR__ . '/../controllers/CarrinhoController.php';
 require_once __DIR__ . '/../controllers/ProdutoController.php';
 require_once __DIR__ . '/../controllers/UsuarioController.php';
-//Adicionado o novo controller de Pedido
 require_once __DIR__ . '/../controllers/PedidoController.php';
 
 class Router {
@@ -27,19 +28,35 @@ class Router {
                 (new PerfilController())->index();
                 break;
 
-            // --- ROTAS NOVAS PARA AS VIEWS ---
-            case $path === '/checkout': // <-- ADICIONADO
-                (new CheckoutController())->index(); // <-- ADICIONADO
-                break; // <-- ADICIONADO
+            case $path === '/checkout':
+                (new CheckoutController())->index();
+                break;
 
-            case $path === '/pedido_confirmado': // <-- ADICIONADO
-                (new PedidoConfirmadoController())->index(); // <-- ADICIONADO
-                break; // <-- ADICIONADO
-            // --- FIM DAS ROTAS NOVAS ---
+            case $path === '/pedido_confirmado':
+                (new PedidoConfirmadoController())->index();
+                break;
+            
+            // --- NOVAS ROTAS DE AUTENTICAÇÃO (VIEWS) ---
+            case $path === '/login': // <-- ADICIONADO
+                (new LoginPageController())->index();
+                break;
 
-            case $path === '/api/login':
+            case $path === '/registrar': // <-- ADICIONADO
+                (new RegistroController())->index();
+                break;
+
+            case $path === '/logout': // <-- ADICIONADO
+                (new LoginController())->logout();
+                break;
+            // --- FIM DAS NOVAS ROTAS ---
+
+            // Rotas de API
+            case $method === 'POST' && $path === '/api/login':
                 (new LoginController())->login();
                 break;
+            
+            // (O restante das suas rotas de API /api/carrinho/*, /api/produtos/*, etc.)
+            // ...
 
             case $path === '/api/carrinho/adicionar':
                 (new CarrinhoController())->adicionar();
@@ -57,7 +74,6 @@ class Router {
                 (new CarrinhoController())->ver();
                 break;
 
-            //Adicionada a nova rota para listar pedidos do usuário
             case $method === 'GET' && $path === '/api/meus-pedidos':
                 (new PedidoController())->listarPedidosDoUsuario();
                 break;
@@ -66,11 +82,9 @@ class Router {
                 (new CarrinhoController())->finalizar();
                 break;
 
-            // --- ROTA NOVA PARA FILTROS COMBINADOS ---
             case $method === 'GET' && $path === '/api/produtos/filtrar':
                 (new ProdutoController())->filtrar();
                 break;
-            // --- FIM DA ROTA NOVA ---
 
             case $path === '/api/produtos':
                 (new ProdutoController())->listarTodos();
@@ -97,7 +111,6 @@ class Router {
                 (new ProdutoController())->buscarProdutos($termo);
                 break;
 
-            // Rotas antigas (não são mais usadas pelo main.js, mas podem ficar)
             case $method === 'GET' && preg_match('/^\/api\/produtos\/categoria\/(.+)$/', $path, $matches):
                 $categoria = urldecode($matches[1]);
                 (new ProdutoController())->buscarPorCategoria($categoria);
@@ -109,7 +122,7 @@ class Router {
                 (new ProdutoController())->buscarPorPreco($min, $max);
                 break;
 
-            case $path === '/api/usuario/cadastrar':
+            case $method === 'POST' && $path === '/api/usuario/cadastrar': // <-- JÁ EXISTIA, AGORA FUNCIONA
                 (new UsuarioController())->registrar();
                 break;
 
