@@ -143,7 +143,6 @@
         const baseURL = "<?= BASE_URL ?>";
 
         document.addEventListener("DOMContentLoaded", async () => {
-            // ... (toda a lógica original do checkout.js) ...
             const orderItemsContainer = document.getElementById('order-items');
             const subtotalEl = document.getElementById('subtotal');
             const totalEl = document.getElementById('total');
@@ -151,35 +150,50 @@
 
             try {
                 const response = await fetch(`${baseURL}/api/carrinho/ver`);
-                const data = await response.json();
+                const data = await response.json(); // data = { carrinho: { ... } }
 
                 if (!response.ok) {
                     throw new Error(data.erro || 'Falha ao carregar carrinho');
                 }
 
-                if (!data.itens || data.itens.length === 0) {
+                // --- INÍCIO DA CORREÇÃO ---
+
+                // 1. Desempacota o objeto 'carrinho' que vem da API
+                const carrinho = data.carrinho; 
+
+                // 2. Verifica 'carrinho.itens', não 'data.itens'
+                if (!carrinho || !carrinho.itens || carrinho.itens.length === 0) { 
                     alert("Seu carrinho está vazio!");
-                    window.location.href = baseURL;
+                    window.location.href = baseURL + "/"; // Garante a barra
                     return;
                 }
                 
                 orderItemsContainer.innerHTML = '';
-                data.itens.forEach(item => {
+                
+                // 3. Itera sobre 'carrinho.itens', não 'data.itens'
+                carrinho.itens.forEach(item => {
+                    // 4. Calcula o subtotal de CADA item (item.subtotal não existia)
+                    const subtotalItem = parseFloat(item.preco) * parseInt(item.quantidade);
+
                     const itemHTML = `
                         <div class="order-item">
                             <img src="${baseURL}/assets/imagens/${item.imagem}" alt="${item.nome}">
                             <div class="order-item-info">
                                 <div class="order-item-name">${item.nome}</div>
-                                <div class="order-item-qty">Quantidade: ${item.quantidade}</div>
+                                <div class_item-qty">Quantidade: ${item.quantidade}</div>
                             </div>
-                            <div class="order-item-price">R$ ${parseFloat(item.subtotal).toFixed(2).replace(".", ",")}</div>
+                            <div class_item-price">R$ ${subtotalItem.toFixed(2).replace(".", ",")}</div>
                         </div>
                     `;
                     orderItemsContainer.innerHTML += itemHTML;
                 });
                 
-                subtotalEl.textContent = `R$ ${parseFloat(data.total).toFixed(2).replace(".", ",")}`;
-                totalEl.textContent = `R$ ${parseFloat(data.total).toFixed(2).replace(".", ",")}`;
+                // 6. Usa 'carrinho.totalPreco', não 'data.total'
+                subtotalEl.textContent = `R$ ${parseFloat(carrinho.totalPreco).toFixed(2).replace(".", ",")}`;
+                // 7. Usa 'carrinho.totalPreco', não 'data.total'
+                totalEl.textContent = `R$ ${parseFloat(carrinho.totalPreco).toFixed(2).replace(".", ",")}`;
+
+                // --- FIM DA CORREÇÃO ---
 
             } catch (error) {
                 console.error("Erro ao carregar carrinho:", error);
