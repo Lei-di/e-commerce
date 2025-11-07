@@ -51,15 +51,6 @@
                     <label><input type="number" name="maximo" value="" placeholder="Max.." ></label>
                 </article>
 
-                <h4>Tamanhos</h4><br>
-                <article class="tamanho">
-                    <label><input type="checkbox" name="tamanho" value="PP"> PP</label>
-                    <label><input type="checkbox" name="tamanho" value="P"> P</label>
-                    <label><input type="checkbox" name="tamanho" value="M"> M</label>
-                    <label><input type="checkbox" name="tamanho" value="G"> G</label>
-                    <label><input type="checkbox" name="tamanho" value="GG"> GG</label>
-                    <label><input type="checkbox" name="tamanho" value="XG"> XG</label>
-                </article>
  
                 <button id="btn-aplicar-filtros" class="btn-aplicar-filtros">Aplicar Filtros</button>
                 </div>
