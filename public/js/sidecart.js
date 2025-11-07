@@ -1,4 +1,3 @@
-// public/js/sidecart.js
 document.addEventListener('DOMContentLoaded', () => {
     // --- 1. Seletores do DOM ---
     const cartIcon = document.getElementById('carrinho'); // Ícone no cabeçalho
@@ -35,17 +34,23 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- 3. Funções de API (Fetch) ---
 
     // ADICIONAR ITEM (Função global para ser chamada pelo main.js)
-    window.apiAdicionarAoCarrinho = async (produtoId, quantidade = 1) => {
+    // Modificada para aceitar 'tamanho'
+    window.apiAdicionarAoCarrinho = async (produtoId, tamanho = null) => {
         try {
             const response = await fetch(`${baseURL}/api/carrinho/adicionar`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ produto_id: produtoId, quantidade: quantidade })
+                body: JSON.stringify({ 
+                    produto_id: produtoId, 
+                    quantidade: 1,
+                    tamanho: tamanho // Envia o tamanho
+                })
             });
             const result = await response.json();
             if (!response.ok) throw new Error(result.erro || 'Erro ao adicionar item.');
 
             openCart(); // Abre o carrinho já atualizado
+
         } catch (error) {
             console.error("Erro em apiAdicionarAoCarrinho:", error.message);
             alert(`Não foi possível adicionar o item: ${error.message}`);
@@ -53,17 +58,20 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // ATUALIZAR QUANTIDADE
-    async function apiAtualizarQuantidade(produtoId, novaQuantidade) {
+    async function apiAtualizarQuantidade(cartItemId, novaQuantidade) {
         // Se a quantidade for zero ou menos, chama a API de remover
         if (novaQuantidade <= 0) {
-            await apiRemoverDoCarrinho(produtoId);
+            await apiRemoverDoCarrinho(cartItemId);
             return;
         }
         try {
             const response = await fetch(`${baseURL}/api/carrinho/atualizar`, {
                 method: 'PUT', // O backend espera PUT
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ produto_id: produtoId, quantidade: novaQuantidade })
+                body: JSON.stringify({ 
+                    cart_item_id: cartItemId, // Usa a chave única
+                    quantidade: novaQuantidade 
+                })
             });
             const result = await response.json();
             if (!response.ok) throw new Error(result.erro || 'Erro ao atualizar quantidade.');
@@ -76,12 +84,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // REMOVER ITEM
-    async function apiRemoverDoCarrinho(produtoId) {
+    async function apiRemoverDoCarrinho(cartItemId) {
         try {
             const response = await fetch(`${baseURL}/api/carrinho/remover`, {
                 method: 'POST', // O backend espera POST
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ produto_id: produtoId })
+                body: JSON.stringify({ cart_item_id: cartItemId }) // Usa a chave única
             });
             const result = await response.json();
             if (!response.ok) throw new Error(result.erro || 'Erro ao remover item.');
@@ -103,44 +111,49 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!response.ok) throw new Error('Falha ao buscar dados do carrinho.');
 
             const data = await response.json();
+            const carrinho = data.carrinho; // A API agora retorna { carrinho: { ... } }
+            
             itemsContainer.innerHTML = ''; // Limpa o "Carregando..."
 
-            if (!data.itens || data.itens.length === 0) {
+            if (!carrinho || !carrinho.itens || carrinho.itens.length === 0) {
                 itemsContainer.innerHTML = '<p>Seu carrinho está vazio.</p>';
-                totalContainer.textContent = 'Subtotal: R$ 0,00';
+                totalContainer.querySelector('span').textContent = 'R$ 0,00';
                 checkoutBtn.textContent = 'FINALIZAR (0)'; // Atualiza o botão
-                checkoutBtn.style.display = 'block'; // Mostra o botão mesmo vazio (opcional)
+                checkoutBtn.style.display = 'block'; 
                 checkoutBtn.href = '#'; // Impede de ir pro checkout vazio
                 if(freeShippingMsg) freeShippingMsg.style.display = 'none'; // Esconde frete grátis
             } else {
-                let itemCount = 0;
-                data.itens.forEach(item => {
-                    itemCount += item.quantidade; // Soma a quantidade de itens
+                
+                carrinho.itens.forEach(item => {
+                    // --- ADICIONADO: Exibe o tamanho se ele existir ---
+                    const tamanhoHtml = item.tamanho ? `<p class="item-tamanho" style="font-size: 0.9em; color: #555;">Tamanho: <strong>${item.tamanho}</strong></p>` : '';
+
                     // Cria o HTML para cada item
+                    // --- MODIFICADO: Usa 'cart_item_id' para os botões ---
                     itemsContainer.innerHTML += `
                         <div class="cart-item" data-id="${item.id}">
                             <img src="${baseURL}/assets/imagens/${item.imagem}" alt="${item.nome}">
                             <div class="item-details">
                                 <p class="item-name">${item.nome}</p>
-                                <p class="item-price">R$ ${parseFloat(item.preco).toFixed(2).replace('.', ',')}</p>
-                                </div>
-                            <div class="item-quantity">
-                                <button class="qty-decrease" data-id="${item.id}">-</button>
-                                <span>${item.quantidade}</span>
-                                <button class="qty-increase" data-id="${item.id}">+</button>
+                                ${tamanhoHtml} <p class="item-price">R$ ${parseFloat(item.preco).toFixed(2).replace('.', ',')}</p>
                             </div>
-                             <button class="remove-item-btn" data-id="${item.id}" style="background:none; border:none; color:red; font-size:1.2em; cursor:pointer; margin-left: 10px;">&times;</button>
+                            <div class="item-quantity">
+                                <button class="qty-decrease" data-cart-item-id="${item.cart_item_id}">-</button>
+                                <span>${item.quantidade}</span>
+                                <button class="qty-increase" data-cart-item-id="${item.cart_item_id}">+</button>
+                            </div>
+                             <button class="remove-item-btn" data-cart-item-id="${item.cart_item_id}" style="background:none; border:none; color:red; font-size:1.2em; cursor:pointer; margin-left: 10px;">&times;</button>
                         </div>`;
                 });
 
                 // Atualiza o total e o botão
-                totalContainer.textContent = `Subtotal: R$ ${parseFloat(data.total).toFixed(2).replace('.', ',')}`;
-                checkoutBtn.textContent = `FINALIZAR (${itemCount})`; // Mostra contagem
+                totalContainer.querySelector('span').textContent = `R$ ${parseFloat(carrinho.totalPreco).toFixed(2).replace('.', ',')}`;
+                checkoutBtn.textContent = `FINALIZAR (${carrinho.totalItens})`; // Mostra contagem
                 checkoutBtn.style.display = 'block';
                 checkoutBtn.href = `${baseURL}/checkout`; // Link correto
 
                  // Mostra frete grátis (exemplo de condição)
-                if (data.total > 100 && freeShippingMsg) { // Ex: frete grátis acima de R$100
+                if (carrinho.totalPreco > 100 && freeShippingMsg) { 
                     freeShippingMsg.style.display = 'block';
                 } else if(freeShippingMsg) {
                     freeShippingMsg.style.display = 'none';
@@ -160,12 +173,11 @@ document.addEventListener('DOMContentLoaded', () => {
     function addCartItemEvents() {
         // Botões de Aumentar Quantidade (+)
         itemsContainer.querySelectorAll('.qty-increase').forEach(button => {
-            // Remove listener antigo para evitar duplicação (importante!)
-            button.replaceWith(button.cloneNode(true));
+            button.replaceWith(button.cloneNode(true)); // Limpa listeners antigos
         });
         itemsContainer.querySelectorAll('.qty-increase').forEach(button => {
             button.addEventListener('click', (e) => {
-                const id = e.target.dataset.id;
+                const id = e.target.dataset.cartItemId; // Usa a chave única
                 const itemDiv = e.target.closest('.cart-item');
                 const qtySpan = itemDiv.querySelector('.item-quantity span');
                 const currentQty = parseInt(qtySpan.textContent);
@@ -175,12 +187,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Botões de Diminuir Quantidade (-)
         itemsContainer.querySelectorAll('.qty-decrease').forEach(button => {
-             // Remove listener antigo
-            button.replaceWith(button.cloneNode(true));
+            button.replaceWith(button.cloneNode(true)); // Limpa listeners antigos
         });
         itemsContainer.querySelectorAll('.qty-decrease').forEach(button => {
             button.addEventListener('click', (e) => {
-                const id = e.target.dataset.id;
+                const id = e.target.dataset.cartItemId; // Usa a chave única
                 const itemDiv = e.target.closest('.cart-item');
                 const qtySpan = itemDiv.querySelector('.item-quantity span');
                 const currentQty = parseInt(qtySpan.textContent);
@@ -190,12 +201,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Botões de Remover Item (X)
         itemsContainer.querySelectorAll('.remove-item-btn').forEach(button => {
-             // Remove listener antigo
-            button.replaceWith(button.cloneNode(true));
+            button.replaceWith(button.cloneNode(true)); // Limpa listeners antigos
         });
         itemsContainer.querySelectorAll('.remove-item-btn').forEach(button => {
             button.addEventListener('click', (e) => {
-                const id = e.target.dataset.id;
+                const id = e.target.dataset.cartItemId; // Usa a chave única
                 if (confirm('Tem certeza que deseja remover este item?')) {
                     apiRemoverDoCarrinho(id);
                 }
@@ -204,31 +214,31 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- 6. Eventos Principais (Abrir/Fechar) ---
-    cartIcon.addEventListener('click', (e) => {
-        e.preventDefault(); // Previne qualquer comportamento padrão do link/imagem
-        openCart();
-    });
-    closeBtn.addEventListener('click', closeCart);
-    overlay.addEventListener('click', closeCart);
-
+    if (cartIcon) {
+      cartIcon.addEventListener('click', (e) => {
+          e.preventDefault(); 
+          openCart();
+      });
+    }
+    if (closeBtn) closeBtn.addEventListener('click', closeCart);
+    if (overlay) overlay.addEventListener('click', closeCart);
     
-    // --- 7. LÓGICA DO CAMPO DE BUSCA (NOVO) ---
+    // --- 7. LÓGICA DO CAMPO DE BUSCA (Mantida) ---
     const formBusca = document.getElementById('form-busca');
     const inputBusca = document.getElementById('input-busca');
 
     if (formBusca && inputBusca) {
         formBusca.addEventListener('submit', (e) => {
-            e.preventDefault(); // Impede o envio padrão do formulário
-            
-            const termo = inputBusca.value.trim(); // Pega o valor e remove espaços extras
-            
+            e.preventDefault(); 
+            const termo = inputBusca.value.trim(); 
             if (termo) {
-                // Redireciona para a página inicial com o parâmetro de busca
-                // Ex: /e-commerce/public/?busca=vestido
                 window.location.href = `${baseURL}/?busca=${encodeURIComponent(termo)}`;
             }
         });
     }
-    // --- FIM DA LÓGICA DE BUSCA ---
+    
+    // --- 8. CARREGAMENTO INICIAL ---
+    // Atualiza a visualização do carrinho ao carregar a página (sem abrir)
+    updateCartView(); 
 
 });

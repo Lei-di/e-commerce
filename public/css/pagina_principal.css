@@ -361,3 +361,106 @@ main{
     margin: 0;
     color: rgb(254, 114, 0);
 }
+
+
+
+/* --- ESTILOS PARA O MODAL DE TAMANHO --- */
+
+.tamanho-modal-overlay {
+    display: none; /* Oculto por padrão */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 1049; /* Abaixo do modal, acima do resto */
+}
+
+.tamanho-modal {
+    display: none; /* Oculto por padrão */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 320px; /* Largura máxima */
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    z-index: 1050; /* Acima de tudo */
+}
+
+.tamanho-modal h3 {
+    margin-top: 0;
+    text-align: center;
+    font-size: 1.2rem;
+}
+
+.tamanho-opcoes {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 colunas */
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.tamanho-opcoes label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background 0.2s, border-color 0.2s;
+}
+
+.tamanho-opcoes input[type="radio"] {
+    margin-right: 8px;
+}
+
+/* Estiliza o label quando o radio dentro dele está checado */
+.tamanho-opcoes label:has(input:checked) {
+    background-color: #fdf0e1; /* Laranja bem claro */
+    border-color: orange;
+    font-weight: bold;
+}
+
+.btn-confirmar-tamanho {
+    width: 100%;
+    padding: 12px;
+    background-color: orange;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-confirmar-tamanho:hover {
+    background-color: darkorange;
+}
+
+/* Botão de fechar (X) */
+.btn-cancelar-tamanho {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #888;
+    line-height: 1;
+    padding: 5px;
+}
+
+/* Classes para mostrar/ocultar */
+.tamanho-modal-overlay.open,
+.tamanho-modal.open {
+    display: block;
+}

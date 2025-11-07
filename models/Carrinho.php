@@ -1,103 +1,145 @@
 <?php
-// É necessário incluir o arquivo do model Produto para acessar o estoque
+// models/Carrinho.php
 require_once __DIR__ . '/Produto.php';
 
 class Carrinho {
 
-    // Construtor para iniciar a sessão se ela ainda não foi iniciada
-    public function __construct() {
+    /**
+     * Garante que o carrinho exista na sessão.
+     */
+    private static function init() {
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
-    }
-
-    // Método para adicionar um item ao carrinho com validação de estoque
-    public function adicionarItem($produtoId, $quantidade) {
-        $produto = Produto::getById($produtoId);
-        if (!$produto) {
-            return ['success' => false, 'message' => 'Produto não encontrado.'];
-        }
-        
-        $estoqueDisponivel = (int)$produto['estoque'];
-        if ($quantidade > $estoqueDisponivel) {
-            return ['success' => false, 'message' => 'Estoque insuficiente.'];
-        }
-
         if (!isset($_SESSION['carrinho'])) {
             $_SESSION['carrinho'] = [];
         }
-
-        $_SESSION['carrinho'][$produtoId] = $quantidade;
-        return ['success' => true];
     }
 
     /**
-     * NOVO MÉTODO
-     * Atualiza a quantidade de um item no carrinho com validação de estoque.
+     * Adiciona um produto ao carrinho na sessão.
+     * @param int $produtoId ID do produto
+     * @param int $quantidade Quantidade
+     * @param string|null $tamanho O tamanho selecionado (PP, M, G, etc.)
+     * @return bool
      */
-    public function atualizarItem($produtoId, $novaQuantidade) {
-        // Se a quantidade for 0, remove o item
-        if ($novaQuantidade <= 0) {
-            $this->removerItem($produtoId);
-            return ['success' => true, 'message' => 'Item removido do carrinho.'];
-        }
+    public static function adicionar($produtoId, $quantidade = 1, $tamanho = null) {
+        self::init();
 
-        // Busca os dados do produto para obter o estoque
-        $produto = Produto::getById($produtoId);
-        if (!$produto) {
-            return ['success' => false, 'message' => 'Produto não encontrado.'];
-        }
+        // --- LÓGICA DE CHAVE ÚNICA ---
+        // Cria uma chave única para o item no carrinho (ex: "5_M" or "5_default")
+        $cartItemId = $produtoId . '_' . ($tamanho ? $tamanho : 'default');
 
-        // Compara o estoque com a nova quantidade solicitada
-        $estoqueDisponivel = (int)$produto['estoque'];
-        if ($novaQuantidade > $estoqueDisponivel) {
-            return ['success' => false, 'message' => 'Estoque insuficiente para a quantidade solicitada.'];
+        // Verifica se o produto (com esse tamanho) já está no carrinho
+        if (isset($_SESSION['carrinho'][$cartItemId])) {
+            // Se sim, apenas atualiza a quantidade
+            $_SESSION['carrinho'][$cartItemId]['quantidade'] += $quantidade;
+        } else {
+            // Se não, busca os dados do produto para adicionar
+            $produto = Produto::getById($produtoId);
+            if ($produto) {
+                $_SESSION['carrinho'][$cartItemId] = [
+                    'id' => $produtoId, // Armazena o ID real do produto
+                    'nome' => $produto['nome'],
+                    'preco' => $produto['preco'],
+                    'imagem' => $produto['imagem'],
+                    'quantidade' => $quantidade,
+                    'tamanho' => $tamanho // Armazena o tamanho
+                ];
+            } else {
+                return false; // Produto não encontrado
+            }
         }
-
-        // Verifica se o item existe no carrinho para então atualizar
-        if (isset($_SESSION['carrinho'][$produtoId])) {
-            $_SESSION['carrinho'][$produtoId] = $novaQuantidade;
-            return ['success' => true, 'message' => 'Quantidade atualizada com sucesso.'];
-        }
-
-        return ['success' => false, 'message' => 'Item não encontrado no carrinho para atualizar.'];
+        return true;
     }
 
-    // Método para remover um item do carrinho
-    public function removerItem($produtoId) {
-        if (isset($_SESSION['carrinho'][$produtoId])) {
-            unset($_SESSION['carrinho'][$produtoId]);
+    /**
+     * Remove um produto do carrinho na sessão.
+     * @param string $cartItemId ID único do item no carrinho (ex: "5_M")
+     * @return bool
+     */
+    public static function remover($cartItemId) {
+        self::init();
+
+        if (isset($_SESSION['carrinho'][$cartItemId])) {
+            unset($_SESSION['carrinho'][$cartItemId]);
             return true;
         }
         return false;
     }
 
-    // Método para obter todos os itens do carrinho com detalhes
-    public function getItens() {
-        $itensCarrinho = $_SESSION['carrinho'] ?? [];
-        $itensDetalhados = [];
+    /**
+     * Atualiza a quantidade de um produto no carrinho.
+     * @param string $cartItemId ID único do item no carrinho (ex: "5_M")
+     * @param int $quantidade Nova quantidade
+     * @return bool
+     */
+    public static function atualizar($cartItemId, $quantidade) {
+        self::init();
 
-        if (empty($itensCarrinho)) {
-            return [];
+        // Garante que a quantidade seja pelo menos 1
+        $quantidade = max(1, (int)$quantidade);
+
+        if (isset($_SESSION['carrinho'][$cartItemId])) {
+            // Se a quantidade for 0 ou menos, remove o item
+            if ($quantidade <= 0) {
+                return self::remover($cartItemId);
+            }
+            // Senão, atualiza
+            $_SESSION['carrinho'][$cartItemId]['quantidade'] = $quantidade;
+            return true;
         }
+        return false;
+    }
 
-        foreach ($itensCarrinho as $produtoId => $quantidade) {
-            $produto = Produto::getById($produtoId);
+    /**
+     * Retorna o conteúdo do carrinho com dados atualizados.
+     * @return array
+     */
+    public static function ver() {
+        self::init();
+
+        $carrinhoComDados = [];
+        $totalItens = 0;
+        $totalPreco = 0;
+
+        // Itera sobre o carrinho da sessão
+        foreach ($_SESSION['carrinho'] as $cartItemId => $item) {
+            
+            // Busca dados atualizados do produto (segurança) usando o ID real
+            $produto = Produto::getById($item['id']); 
+
             if ($produto) {
-                $itensDetalhados[] = [
-                    'id' => $produto['id'],
+                $totalItens += $item['quantidade'];
+                $totalPreco += $produto['preco'] * $item['quantidade'];
+
+                $carrinhoComDados[] = [
+                    'id' => $item['id'], // O ID real do produto
+                    'cart_item_id' => $cartItemId, // A chave única do carrinho (ex: "5_M")
                     'nome' => $produto['nome'],
                     'preco' => $produto['preco'],
                     'imagem' => $produto['imagem'],
-                    'quantidade' => $quantidade
+                    'quantidade' => $item['quantidade'],
+                    'tamanho' => $item['tamanho'] ?? null // Retorna o tamanho
                 ];
+            } else {
+                // Se o produto não existe mais no DB, remove do carrinho
+                self::remover($cartItemId);
             }
         }
-        return $itensDetalhados;
+
+        return [
+            'itens' => $carrinhoComDados,
+            'totalItens' => $totalItens,
+            'totalPreco' => $totalPreco
+        ];
     }
 
-    // Método para esvaziar o carrinho
-    public function esvaziarCarrinho() {
-        unset($_SESSION['carrinho']);
+    /**
+     * Limpa o carrinho (usado após finalizar o pedido).
+     */
+    public static function limpar() {
+        self::init();
+        $_SESSION['carrinho'] = [];
     }
 }
