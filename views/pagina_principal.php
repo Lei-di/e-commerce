@@ -31,7 +31,10 @@
                     <?php if (isset($categorias_filtro) && !empty($categorias_filtro)): ?>
                         <?php foreach ($categorias_filtro as $categoria): ?>
                             <p>
-                                <input type="checkbox" id="<?= htmlspecialchars($categoria['nome']) ?>">
+                                <input type="radio" 
+                                       id="<?= htmlspecialchars($categoria['nome']) ?>" 
+                                       name="categoria_filtro" 
+                                       value="<?= htmlspecialchars($categoria['nome']) ?>">
                                 <label for="<?= htmlspecialchars($categoria['nome']) ?>">
                                     <?= htmlspecialchars($categoria['nome']) ?>
                                 </label>

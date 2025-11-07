@@ -54,17 +54,24 @@ document.addEventListener("DOMContentLoaded", () => {
           // --- FIM DA ATUALIZAÇÃO ---
 
 
-          // Categorias
-          const categoriaCheckbox = document.querySelector(".filtro .opcoes input[type='checkbox']:checked");
-          const categoria = categoriaCheckbox ? categoriaCheckbox.id : null; // 'feminino', 'masculino', etc.
+          // Categorias (MODIFICADO para radio button)
+          // Seleciona pelo 'name' do radio button
+          const categoriaRadio = document.querySelector(".filtro .opcoes input[name='categoria_filtro']:checked");
+          // Lê o 'value' em vez do 'id'
+          const categoria = categoriaRadio ? categoriaRadio.value : null; 
 
           // 2. Definir os parâmetros para a função filtrarProdutos
           let params = {};
 
-          // --- INÍCIO DA ATUALIZAÇÃO LÓGICA ---
-          // Verifica se *pelo menos um* dos campos de preço foi preenchido
+          // --- LÓGICA DE FILTROS COMBINADOS (ATUALIZADA) ---
+          
+          // Adiciona a categoria (se selecionada)
+          if (categoria) {
+              params.categoria = categoria;
+          }
+
+          // Adiciona o preço (se preenchido)
           if (minPreco || maxPreco) { 
-              
               // Define padrões se um dos campos estiver vazio
               if (minPreco === "") {
                   minPreco = "0"; // Preço mínimo padrão
@@ -74,36 +81,24 @@ document.addEventListener("DOMContentLoaded", () => {
               }
 
               // --- NOVO: Garantir que min não seja maior que max ---
-              // Converte para número para comparar corretamente
               let minVal = parseFloat(minPreco);
               let maxVal = parseFloat(maxPreco);
 
               if (minVal > maxVal) {
-                  // Se min for maior que max, inverte os valores
                   let temp = minPreco;
                   minPreco = maxPreco;
                   maxPreco = temp;
-                  
-                  // Atualiza os campos de input visualmente
                   minPrecoInput.value = minPreco;
                   maxPrecoInput.value = maxPreco;
               }
               // --- FIM DA GARANTIA ---
 
-              // Prioridade 1: Filtro por preço (ignora o resto, pois a API não combina)
-              params.preco = `${minPreco}-${maxPreco}`;
-              if(tituloH1) tituloH1.textContent = `Preço entre R$${minPreco} e R$${maxPreco}`;
-          
-          } else if (categoria) {
-              // Prioridade 2: Filtro por categoria
-              params.categoria = categoria;
-          } else {
-              // Se nada for selecionado, apenas recarrega as novidades (todos)
-              params.categoria = 'novidades';
+              params.min = minPreco;
+              params.max = maxPreco;
           }
-          // --- FIM DA ATUALIZAÇÃO LÓGICA ---
+          // --- FIM DA LÓGICA ATUALIZADA ---
 
-          // 3. Chamar a função de filtro existente
+          // 3. Chamar a função de filtro existente (agora com todos os params)
           filtrarProdutos(params);
           // --- NOVO: rola para a seção de produtos ---
           scrollToProdutos();
@@ -172,32 +167,55 @@ document.addEventListener("DOMContentLoaded", () => {
   // --- FIM DA NOVA FUNÇÃO --- // <-- ADICIONADO -->
 
 
-  // --- FUNÇÃO MODIFICAÇÃO ---
+  // --- FUNÇÃO MODIFICADA ---
   async function filtrarProdutos(params = {}) {
-    let url = `${baseURL}/api/produtos`;
+    let url = ""; // A URL será definida pela lógica abaixo
     
     // O H1 agora é pego fora da função
-    // const tituloH1 = document.querySelector('.area-produto h1'); // REMOVIDO DAQUI
-
-    // --- LÓGICA MODIFICADA PARA PRIORIZAR O PREÇO ---
-    // Se um parâmetro de preço foi passado (pelo botão)
-    if (params.preco) {
-      const [min, max] = params.preco.split('-');
-      url = `${baseURL}/api/produtos/preco/${min}/${max}`;
-      // O título já foi atualizado no listener do botão
+    if (!tituloH1) {
+        console.error("Elemento H1 do título não encontrado.");
+        return;
     }
-    // Senão, se uma categoria foi passada...
-    else if (params.categoria && params.categoria !== 'novidades') {
-      url = `${baseURL}/api/produtos/categoria/${encodeURIComponent(params.categoria)}`;
-      if(tituloH1) tituloH1.textContent = params.categoria.charAt(0).toUpperCase() + params.categoria.slice(1);
 
-    } else if (params.busca) { // Lógica de busca mantida
+    // --- LÓGICA MODIFICADA PARA USAR O NOVO ENDPOINT ---
+
+    // Caso 1: É uma busca (veio da barra de pesquisa)
+    if (params.busca) {
         url = `${baseURL}/api/produtos/buscar/${encodeURIComponent(params.busca)}`;
-        if(tituloH1) tituloH1.textContent = `Busca por: "${params.busca}"`;
+        tituloH1.textContent = `Busca por: "${params.busca}"`;
 
-    } else {
-        // Garante um título padrão
-        if(tituloH1) tituloH1.textContent = "Novidades";
+    } 
+    // Caso 2: É um filtro (veio do botão, link de categoria ou carregamento inicial)
+    else {
+        url = `${baseURL}/api/produtos/filtrar?`; // Novo endpoint
+        
+        let queryParams = []; // Array para os parâmetros da URL
+        let titulo = []; // Array para construir o título
+
+        // Adiciona categoria ao filtro
+        if (params.categoria && params.categoria !== 'novidades') {
+            queryParams.push(`categoria=${encodeURIComponent(params.categoria)}`);
+            titulo.push(params.categoria.charAt(0).toUpperCase() + params.categoria.slice(1));
+        }
+
+        // Adiciona preço ao filtro
+        if (params.min && params.max) {
+            queryParams.push(`min=${params.min}`);
+            queryParams.push(`max=${params.max}`);
+            titulo.push(`Preço entre R$${params.min} e R$${params.max}`);
+        }
+
+        // Junta os parâmetros na URL
+        if (queryParams.length > 0) {
+            url += queryParams.join('&');
+        }
+
+        // Define o título H1
+        if (titulo.length > 0) {
+            tituloH1.textContent = titulo.join(' | '); // Ex: "Feminino | Preço entre R$0 e R$100"
+        } else {
+            tituloH1.textContent = "Novidades"; // Título padrão se nenhum filtro
+        }
     }
     // --- FIM DA MODIFICAÇÃO ---
 
@@ -220,12 +238,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Event listener para os links de categoria (sem alterações)
+  // Event listener para os links de categoria (agora chama a função de filtro unificada)
   categoryLinks.forEach(link => {
     link.addEventListener("click", (event) => {
       event.preventDefault();
       const category = link.dataset.category;
-      // <-- A atualização do H1 agora é feita dentro de filtrarProdutos -->
+      // Chama a função de filtro APENAS com a categoria
       filtrarProdutos({ categoria: category });
       // --- NOVO: rola para a seção de produtos ---
       scrollToProdutos();
@@ -245,7 +263,7 @@ document.addEventListener("DOMContentLoaded", () => {
       scrollToProdutos();
   } else {
       // Senão, usa a lógica de categoria que já existia
-      // (Isso também atualiza o título H1 inicial corretamente)
+      // (Isso também atualiza o H1 inicial corretamente)
       filtrarProdutos({ categoria: categoriaInicial });
       // --- NOVO: rola para a seção de produtos ao carregar vindo de um link de categoria ---
       if (categoriaInicial && categoriaInicial !== 'novidades') {

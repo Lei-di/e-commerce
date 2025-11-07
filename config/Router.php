@@ -66,6 +66,12 @@ class Router {
                 (new CarrinhoController())->finalizar();
                 break;
 
+            // --- ROTA NOVA PARA FILTROS COMBINADOS ---
+            case $method === 'GET' && $path === '/api/produtos/filtrar':
+                (new ProdutoController())->filtrar();
+                break;
+            // --- FIM DA ROTA NOVA ---
+
             case $path === '/api/produtos':
                 (new ProdutoController())->listarTodos();
                 break;
@@ -91,6 +97,7 @@ class Router {
                 (new ProdutoController())->buscarProdutos($termo);
                 break;
 
+            // Rotas antigas (não são mais usadas pelo main.js, mas podem ficar)
             case $method === 'GET' && preg_match('/^\/api\/produtos\/categoria\/(.+)$/', $path, $matches):
                 $categoria = urldecode($matches[1]);
                 (new ProdutoController())->buscarPorCategoria($categoria);

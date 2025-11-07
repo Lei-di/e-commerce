@@ -98,6 +98,55 @@ class Produto {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    // --- NOVO MÉTODO PARA FILTROS COMBINADOS ---
+    /**
+     * Busca produtos com base em múltiplos filtros (categoria, preço min/max)
+     * @param array $filtros Array associativo com chaves 'categoria', 'min', 'max'
+     * @return array Lista de produtos filtrados
+     */
+    public static function getByFiltros($filtros = []) {
+        global $conn;
+
+        $sqlBase = "SELECT 
+                        p.id_produto AS id,
+                        p.nome AS nome,
+                        c.nome AS categoria,
+                        p.preco,
+                        e.quantidade AS estoque,
+                        p.imagem
+                    FROM produtos p
+                    JOIN categorias c ON p.id_categoria = c.id_categoria
+                    JOIN estoque e ON p.id_produto = e.id_produto";
+        
+        $sqlWhere = " WHERE 1=1"; // Cláusula base
+        $params = []; // Parâmetros para o PDO
+
+        // Adiciona filtro de Categoria
+        if (!empty($filtros['categoria']) && strtolower($filtros['categoria']) !== 'novidades') {
+            $sqlWhere .= " AND c.nome = :categoria";
+            $params[':categoria'] = $filtros['categoria'];
+        }
+
+        // Adiciona filtro de Preço Mínimo
+        if (!empty($filtros['min'])) {
+            $sqlWhere .= " AND p.preco >= :min";
+            $params[':min'] = $filtros['min'];
+        }
+
+        // Adiciona filtro de Preço Máximo
+        if (!empty($filtros['max'])) {
+            $sqlWhere .= " AND p.preco <= :max";
+            $params[':max'] = $filtros['max'];
+        }
+
+        $sqlOrder = " ORDER BY p.nome";
+
+        // Prepara e executa a consulta final
+        $stmt = $conn->prepare($sqlBase . $sqlWhere . $sqlOrder);
+        $stmt->execute($params);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     // Cria um novo produto
     public static function criar($dados) {
         global $conn;
@@ -170,7 +219,7 @@ class Produto {
         return $stmt->rowCount() > 0;
     }
 
-    // Busca por faixa de preço
+    // Busca por faixa de preço (MANTIDO, mas não será usado pelo main.js)
     public static function getByFaixaDePreco($min, $max) {
         global $conn;
 
