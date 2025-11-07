@@ -47,7 +47,6 @@
                     <label><input type="number" name="maximo" value="" placeholder="Max.."></label>
                 </article>
 
-
                 <h4>Tamanhos</h4><br>
                 <article class="tamanho">
                     <label><input type="checkbox" name="tamanho" value="PP"> PP</label>
@@ -57,18 +56,7 @@
                     <label><input type="checkbox" name="tamanho" value="GG"> GG</label>
                     <label><input type="checkbox" name="tamanho" value="XG"> XG</label>
                 </article>
-
-
-                <h4>Cores</h4><br>
-                <article class="tamanho">
-                    <label><input type="checkbox" name="cor" value="Preto"> Preto</label>
-                    <label><input type="checkbox" name="cor" value="Cinza"> Cinza</label>
-                    <label><input type="checkbox" name="cor" value="Vermelho"> Vermelho</label>
-                    <label><input type="checkbox" name="cor" value="Branco"> Branco</label>
-                    <label><input type="checkbox" name="cor" value="Azul"> Azul</label>
-                    <label><input type="checkbox" name="cor" value="Verde"> Verde</label>
-                </article>
-                
+ 
                 <button id="btn-aplicar-filtros" class="btn-aplicar-filtros">Aplicar Filtros</button>
                 </div>
         <div class="area-produto">
