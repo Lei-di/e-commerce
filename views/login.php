@@ -1,130 +1,88 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Elegancia Store</title>
-    <style>
-        body { background-color: #f4f4f4; font-family: Arial, sans-serif; }
-        .login-container {
-            max-width: 400px;
-            margin: 100px auto; /* Aumentei a margem do topo */
-            background: #fff;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            text-align: center;
-        }
-        /* Adicionei o H1 da logo aqui */
-        .login-logo {
-            font-size: 32px;
-            font-weight: 700;
-            color: #333;
-            margin-bottom: 25px;
-            letter-spacing: 1px;
-        }
-        .login-container h2 { font-size: 24px; margin-bottom: 20px; font-weight: 600; }
-        .form-group { margin-bottom: 20px; text-align: left; }
-        .form-group label { display: block; margin-bottom: 8px; font-weight: 500; }
-        .form-group input {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            box-sizing: border-box; 
-        }
-        .btn {
-            width: 100%;
-            padding: 14px;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .btn-primary {
-            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
-            color: white;
-            margin-bottom: 15px;
-        }
-        .btn-secondary {
-            background: #e0e0e0;
-            color: #333;
-            text-decoration: none;
-            display: block;
-        }
-        .error-message {
-            color: red;
-            background: #fdd;
-            border: 1px solid red;
-            padding: 10px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            display: none; 
-        }
-    </style>
+    <link rel="stylesheet" href="<?= BASE_URL ?>/css/index.css"> 
 </head>
-<body>
-    <main class="login-container">
-        <div class="login-logo">ELEGANCIA</div>
-        <h2>Acessar Minha Conta</h2>
-        
-        <div id="error-message" class="error-message"></div>
+<body class="login-page">
 
-        <form id="login-form">
+    <div class="login-container">
+        <img src="<?= BASE_URL ?>/assets/imagens/logo.png" alt="Logo Elegancia" class="login-logo">
+
+        <form id="login-form" class="login-form">
+            <h2>Login</h2>
+            
+            <div id="login-error-message" class="login-error" style="display: none;"></div>
+
             <div class="form-group">
                 <label for="email">E-mail</label>
-                <input type="email" id="email" required>
+                <input type="email" id="email" name="email" required>
             </div>
+            
             <div class="form-group">
                 <label for="senha">Senha</label>
-                <input type="password" id="senha" required>
+                <input type="password" id="senha" name="senha" required>
             </div>
             
-            <button type="submit" id="btn-login" class="btn btn-primary">Entrar</button>
-            <a href="<?= BASE_URL ?>/registrar" class="btn btn-secondary">Não tenho conta</a>
+            <button type="submit" id="btn-login" class="login-button">Entrar</button>
+            
+            <p class="register-link">
+                Não tem uma conta? <a href="<?= BASE_URL ?>/registrar">Crie uma</a>
+            </p>
         </form>
-    </main>
+    </div>
 
     <script>
-        const baseURL = "<?= BASE_URL ?>";
+        const baseURL = "<?= BASE_URL ?>"; // Garante que baseURL está definida
 
-        document.getElementById("login-form").addEventListener("submit", async (e) => {
-            e.preventDefault();
-            
-            const email = document.getElementById("email").value;
-            const senha = document.getElementById("senha").value;
-            const btnLogin = document.getElementById("btn-login");
-            const errorMsg = document.getElementById("error-message");
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('login-form');
+            const errorMessageDiv = document.getElementById('login-error-message');
+            const btnLogin = document.getElementById('btn-login');
 
-            btnLogin.disabled = true;
-            btnLogin.textContent = "Entrando...";
-            errorMsg.style.display = 'none';
+            loginForm.addEventListener('submit', async function(e) {
+                e.preventDefault(); 
+                
+                // Pega os dados direto dos campos
+                const email = document.getElementById("email").value;
+                const senha = document.getElementById("senha").value;
 
-            try {
-                const response = await fetch(`${baseURL}/api/login`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, senha })
-                });
+                errorMessageDiv.style.display = 'none';
+                btnLogin.disabled = true;
+                btnLogin.textContent = "Entrando...";
 
-                const result = await response.json();
+                try {
+                    const response = await fetch(`${baseURL}/api/login`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ email: email, senha: senha }) 
+                    });
 
-                if (response.ok) {
-                    // SUCESSO! Redireciona para a HOME (produtos)
-                    window.location.href = `${baseURL}/home`;
-                } else {
-                    // Erro
-                    throw new Error(result.erro || "Falha no login");
+                    const result = await response.json();
+
+                    // --- ESTA É A CORREÇÃO ---
+                    // Verificamos 'response.ok' (status 200) para sucesso
+                    // e 'result.erro' para falha, como sua API envia.
+                    if (response.ok) {
+                        // SUCESSO!
+                        window.location.href = `${baseURL}/home`;
+                    } else {
+                        // ERRO!
+                        throw new Error(result.erro || "Falha no login");
+                    }
+                    // --- FIM DA CORREÇÃO ---
+
+                } catch (error) {
+                    errorMessageDiv.textContent = error.message;
+                    errorMessageDiv.style.display = 'block';
+                    btnLogin.disabled = false;
+                    btnLogin.textContent = "Entrar";
                 }
-
-            } catch (error) {
-                errorMsg.textContent = error.message;
-                errorMsg.style.display = 'block';
-                btnLogin.disabled = false;
-                btnLogin.textContent = "Entrar";
-            }
+            });
         });
     </script>
     </body>

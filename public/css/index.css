@@ -145,3 +145,182 @@ body {
     font-size: 14px;
     margin-top: 10px;
 }
+
+/* ========================================= */
+/* ESTILOS DA PÁGINA DE LOGIN                */
+/* ========================================= */
+
+/* Fundo com gradiente laranja suave */
+body.login-page {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #fdf5e6 0%, #f1960c 100%); /* Um gradiente de 'creme' para o seu laranja */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+/* "Card" centralizado para o formulário */
+.login-container {
+    background-color: #ffffff;
+    padding: 2.5rem; /* Mais espaço interno */
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    border-top: 5px solid #f1960c; /* Detalhe laranja no topo */
+}
+
+/* Estilo do Logo */
+.login-logo {
+    width: 150px;
+    margin-bottom: 1.5rem;
+}
+
+.login-form h2 {
+    margin-bottom: 1.5rem;
+    color: #333;
+    font-size: 1.8rem;
+}
+
+/* Agrupador de label e input */
+.form-group {
+    margin-bottom: 1.5rem;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #555;
+    font-weight: bold;
+}
+
+/* Estilo dos campos de input */
+.form-group input[type="email"],
+.form-group input[type="password"] {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-sizing: border-box; /* Garante que o padding não afete a largura */
+    font-size: 1rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form-group input[type="email"]:focus,
+.form-group input[type="password"]:focus {
+    border-color: #f1960c;
+    box-shadow: 0 0 8px rgba(241, 150, 12, 0.2); /* Sombra sutil laranja */
+    outline: none;
+}
+
+/* Estilo do botão de login */
+.login-button {
+    width: 100%;
+    padding: 0.9rem;
+    border: none;
+    border-radius: 8px;
+    background-color: #000; /* Preto, como no cabeçalho */
+    color: white;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 0.5rem;
+}
+
+.login-button:hover {
+    background-color: #333; /* Um pouco mais claro no hover */
+}
+
+/* Link para a página de registro */
+.register-link {
+    margin-top: 1.5rem;
+    color: #777;
+    font-size: 0.9rem;
+}
+
+.register-link a {
+    color: #f1960c; /* Cor laranja para o link */
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.register-link a:hover {
+    text-decoration: underline;
+}
+
+/* Estilo da mensagem de erro */
+.login-error {
+    background-color: #fff0f0;
+    color: #d8000c;
+    border: 1px solid #ffd2d2;
+    padding: 0.8rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+/* ========================================= */
+/* ESTILOS DA PÁGINA DE REGISTRO             */
+/* ========================================= */
+
+/* Ajusta o card de registro para ser um pouco mais largo */
+.login-container.register-container {
+    max-width: 600px; /* Mais largo para caber os campos */
+    margin: 40px auto; /* Adiciona margem em cima e embaixo para scroll */
+}
+
+/* Título de seção (ex: "Endereço Principal") */
+.section-title {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #f1960c; /* Laranja */
+    text-align: left;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 5px;
+}
+
+/* Layout em duas colunas para campos */
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+/* Ajuste para inputs dentro de .form-row não perderem o espaçamento */
+.form-row .form-group {
+    margin-bottom: 0;
+}
+
+/* Mensagem de sucesso (verde) */
+.success-message {
+    background-color: #f0fff0;
+    color: #008000;
+    border: 1px solid #d2ffd2;
+    padding: 0.8rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+/* Media query para telas pequenas (celulares) */
+@media (max-width: 600px) {
+    /* O card ocupa a largura total */
+    .login-container.register-container {
+        margin: 20px auto;
+        max-width: 90%;
+        padding: 1.5rem;
+    }
+
+    /* Campos em coluna única em vez de duas */
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 1.5rem; /* Mantém o espaçamento vertical */
+    }
+}

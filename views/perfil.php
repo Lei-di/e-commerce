@@ -100,130 +100,126 @@
             <div id="meu-perfil" class="tab-content active">
                 <h3>MEU PERFIL</h3>
                 <p>Informações do seu perfil.</p>
-                    <div class="conteudo-perfil-dados">
-
-                        <div id="dados-view">
-                            <?php if (isset($usuario)): ?>
-                                <div class="info-perfil">
-                                    <h4>Nome Completo:</h4>
-                                    <p><?= htmlspecialchars($usuario['nome']) ?></p>
-                                </div>
-                                <div class="info-perfil">
-                                    <h4>Telefones:</h4>
-                                    <p><?= htmlspecialchars($usuario['telefone']) ?></p>
-                                </div>
-                                <div class="info-perfil">
-                                    <h4>E-mail:</h4>
-                                    <p><?= htmlspecialchars($usuario['email']) ?></p>
-                                </div>
-                                <div class="info-perfil">
-                                    <h4>CPF:</h4>
-                                    <p><?= htmlspecialchars($usuario['cpf']) ?></p>
-                                </div>
-
-                                <div class="enderecos" style="margin-top: 20px;">
-                                    <h4 style="margin-bottom: 10px;">Endereços:</h4>
-                                    
-                                    <?php if (isset($usuario['enderecos']) && !empty($usuario['enderecos'])): ?>
-                                        <?php foreach ($usuario['enderecos'] as $endereco): ?>
-                                            <div class="conteudo-endereco" style="margin-bottom: 10px; border: 1px solid #eee; padding: 10px; border-radius: 5px;">
-                                                <p>
-                                                    <?= htmlspecialchars($endereco['logradouro']) ?>, 
-                                                    <?= htmlspecialchars($endereco['numero']) ?>
-                                                    <?php if (!empty($endereco['complemento'])): ?>
-                                                        , <?= htmlspecialchars($endereco['complemento']) ?>
-                                                    <?php endif; ?>
-                                                    , <?= htmlspecialchars($endereco['bairro']) ?> 
-                                                    - <?= htmlspecialchars($endereco['cidade']) ?>
-                                                    - <?= htmlspecialchars($endereco['estado']) ?>
-                                                    - <?= htmlspecialchars($endereco['cep']) ?>
-                                                </p>
-                                            </div>
-                                        <?php endforeach; ?>
-                                    <?php else: ?>
-                                        <div class="conteudo-endereco">
-                                            <p>Nenhum endereço cadastrado.</p>
-                                        </div>
-                                    <?php endif; ?>
-
-                                    <button id="btn-novo-endereco" class="btn-outline" style="margin-top: 10px;">ADICIONAR MAIS UM ENDEREÇO</button>
-
-                                    <div id="form-novo-endereco" style="display: none; background-color: #f9f9f9; padding: 20px; border-radius: 8px; margin-top: 20px; border: 1px dashed #ccc;">
-                                        <h4>Novo Endereço</h4>
-                                        <form id="form-salvar-endereco">
-                                            <div class="form-group" style="margin-bottom: 15px;">
-                                                <label for="apelido" style="display: block; margin-bottom: 5px;">Apelido (ex: Casa, Trabalho)*</label>
-                                                <input type="text" id="apelido" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
-                                            </div>
-                                            <div class="form-group" style="margin-bottom: 15px;">
-                                                <label for="cep-novo" style="display: block; margin-bottom: 5px;">CEP *</label>
-                                                <input type="text" id="cep-novo" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
-                                            </div>
-                                            <div class="form-group" style="margin-bottom: 15px;">
-                                                <label for="logradouro-novo" style="display: block; margin-bottom: 5px;">Rua/Logradouro *</label>
-                                                <input type="text" id="logradouro-novo" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
-                                            </div>
-                                            <div class="form-group" style="margin-bottom: 15px;">
-                                                <label for="numero-novo" style="display: block; margin-bottom: 5px;">Número *</label>
-                                                <input type="text" id="numero-novo" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
-                                            </div>
-                                            <div class="form-group" style="margin-bottom: 15px;">
-                                                <label for="complemento-novo" style="display: block; margin-bottom: 5px;">Complemento</label>
-                                                <input type="text" id="complemento-novo" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
-                                            </div>
-                                            <div class="form-group" style="margin-bottom: 15px;">
-                                                <label for="bairro-novo" style="display: block; margin-bottom: 5px;">Bairro *</label>
-                                                <input type="text" id="bairro-novo" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
-                                            </div>
-                                            <div class="form-group" style="margin-bottom: 15px;">
-                                                <label for="cidade-novo" style="display: block; margin-bottom: 5px;">Cidade *</label>
-                                                <input type="text" id="cidade-novo" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
-                                            </div>
-                                            <div class="form-group" style="margin-bottom: 15px;">
-                                                <label for="estado-novo" style="display: block; margin-bottom: 5px;">Estado (UF) *</label>
-                                                <input type="text" id="estado-novo" maxlength="2" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
-                                            </div>
-
-                                            <button type="submit" class="btn-primary" style="background: #f1960c; color: #fff; border: 0; padding: 10px 15px; cursor: pointer; border-radius: 8px;">Salvar Endereço</button>
-                                            <button type="button" id="btn-cancelar-endereco" class="btn-outline" style="margin-left: 10px;">Cancelar</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            <?php else: ?>
-                                <p>Erro ao carregar dados do usuário.</p>
-                            <?php endif; ?>
+                
+                <div id="dados-view" style="margin-top: 20px;">
+                    <?php if (isset($usuario)): ?>
+                        <div class="info-perfil">
+                            <h4>Nome Completo:</h4>
+                            <p><?= htmlspecialchars($usuario['nome']) ?></p>
+                        </div>
+                        <div class="info-perfil">
+                            <h4>Telefones:</h4>
+                            <p><?= htmlspecialchars($usuario['telefone']) ?></p>
+                        </div>
+                        <div class="info-perfil">
+                            <h4>E-mail:</h4>
+                            <p><?= htmlspecialchars($usuario['email']) ?></p>
+                        </div>
+                        <div class="info-perfil">
+                            <h4>CPF:</h4>
+                            <p><?= htmlspecialchars($usuario['cpf']) ?></p>
+                        </div>
+                        
+                        <div class="info-perfil">
+                            <h4>Endereços:</h4>
                             
-                            <button id="btn-editar-perfil" class="btn-primary" style="margin-top: 15px;">
-                                Editar Dados
-                            </button>
+                            <?php if (isset($usuario['enderecos']) && !empty($usuario['enderecos'])): ?>
+                                <?php foreach ($usuario['enderecos'] as $endereco): ?>
+                                    <p style="margin-bottom: 15px; padding-bottom: 5px; border-bottom: 1px solid #f0f0f0;">
+                                        <?= htmlspecialchars($endereco['logradouro']) ?>, 
+                                        <?= htmlspecialchars($endereco['numero']) ?>
+                                        <?php if (!empty($endereco['complemento'])): ?>
+                                            , <?= htmlspecialchars($endereco['complemento']) ?>
+                                        <?php endif; ?>
+                                        <br> <?= htmlspecialchars($endereco['bairro']) ?> 
+                                        - <?= htmlspecialchars($endereco['cidade']) ?>
+                                        - <?= htmlspecialchars($endereco['estado']) ?>
+                                        - <?= htmlspecialchars($endereco['cep']) ?>
+                                    </p>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <p>Nenhum endereço cadastrado.</p>
+                            <?php endif; ?>
+
+                            <button id="btn-novo-endereco" class="btn-outline" style="margin-top: 10px;">ADICIONAR MAIS UM ENDEREÇO</button>
+
+                            <div id="form-novo-endereco" style="display: none; background-color: #f9f9f9; padding: 20px; border-radius: 8px; margin-top: 20px; border: 1px dashed #ccc;">
+                                <h4>Novo Endereço</h4>
+                                <form id="form-salvar-endereco">
+                                    <div class="form-group" style="margin-bottom: 15px;">
+                                        <label for="apelido" style="display: block; margin-bottom: 5px;">Apelido (ex: Casa, Trabalho)*</label>
+                                        <input type="text" id="apelido" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                                    </div>
+                                    <div class="form-group" style="margin-bottom: 15px;">
+                                        <label for="cep-novo" style="display: block; margin-bottom: 5px;">CEP *</label>
+                                        <input type="text" id="cep-novo" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                                    </div>
+                                    <div class="form-group" style="margin-bottom: 15px;">
+                                        <label for="logradouro-novo" style="display: block; margin-bottom: 5px;">Rua/Logradouro *</label>
+                                        <input type="text" id="logradouro-novo" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                                    </div>
+                                    <div class="form-group" style="margin-bottom: 15px;">
+                                        <label for="numero-novo" style="display: block; margin-bottom: 5px;">Número *</label>
+                                        <input type="text" id="numero-novo" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                                    </div>
+                                    <div class="form-group" style="margin-bottom: 15px;">
+                                        <label for="complemento-novo" style="display: block; margin-bottom: 5px;">Complemento</label>
+                                        <input type="text" id="complemento-novo" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                                    </div>
+                                    <div class="form-group" style="margin-bottom: 15px;">
+                                        <label for="bairro-novo" style="display: block; margin-bottom: 5px;">Bairro *</label>
+                                        <input type="text" id="bairro-novo" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                                    </div>
+                                    <div class="form-group" style="margin-bottom: 15px;">
+                                        <label for="cidade-novo" style="display: block; margin-bottom: 5px;">Cidade *</label>
+                                        <input type="text" id="cidade-novo" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                                    </div>
+                                    <div class="form-group" style="margin-bottom: 15px;">
+                                        <label for="estado-novo" style="display: block; margin-bottom: 5px;">Estado (UF) *</label>
+                                        <input type="text" id="estado-novo" maxlength="2" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                                    </div>
+
+                                    <button type="submit" class="btn-primary" style="background: #f1960c; color: #fff; border: 0; padding: 10px 15px; cursor: pointer; border-radius: 8px;">Salvar Endereço</button>
+                                    <button type="button" id="btn-cancelar-endereco" class="btn-outline" style="margin-left: 10px;">Cancelar</button>
+                                </form>
+                            </div>
+                        </div>
+                    
+                    <?php else: ?>
+                        <p>Erro ao carregar dados do usuário.</p>
+                    <?php endif; ?>
+                    
+                    <button id="btn-editar-perfil" class="btn-primary" style="margin-top: 15px;">
+                        Editar Dados
+                    </button>
+                </div>
+
+                <div id="dados-edit" style="display: none; margin-top: 20px;">
+                    <form id="form-salvar-perfil">
+                        <div class="form-group" style="margin-bottom: 15px;">
+                            <label for="nome-edit" style="display: block; margin-bottom: 5px;">Nome Completo *</label>
+                            <input type="text" id="nome-edit" value="<?= htmlspecialchars($usuario['nome'] ?? '') ?>" required style="width: 100%; padding: 8px;">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 15px;">
+                            <label for="telefone-edit" style="display: block; margin-bottom: 5px;">Telefone *</label>
+                            <input type="tel" id="telefone-edit" value="<?= htmlspecialchars($usuario['telefone'] ?? '') ?>" required style="width: 100%; padding: 8px;">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 15px;">
+                            <label for="email-edit" style="display: block; margin-bottom: 5px;">E-mail *</label>
+                            <input type="email" id="email-edit" value="<?= htmlspecialchars($usuario['email'] ?? '') ?>" required style="width: 100%; padding: 8px;">
+                        </div>
+                        
+                        <div class="form-group" style="margin-bottom: 15px; display:none;">
+                            <label for="nasc-edit" style="display: block; margin-bottom: 5px;">Data de Nascimento *</label>
+                            <input type="text" id="nasc-edit" value="" style="width: 100%; padding: 8px;">
                         </div>
 
-                        <div id="dados-edit" style="display: none;">
-                            <form id="form-salvar-perfil">
-                                <div class="form-group" style="margin-bottom: 15px;">
-                                    <label for="nome-edit" style="display: block; margin-bottom: 5px;">Nome Completo *</label>
-                                    <input type="text" id="nome-edit" value="<?= htmlspecialchars($usuario['nome'] ?? '') ?>" required style="width: 100%; padding: 8px;">
-                                </div>
-                                <div class="form-group" style="margin-bottom: 15px;">
-                                    <label for="telefone-edit" style="display: block; margin-bottom: 5px;">Telefone *</label>
-                                    <input type="tel" id="telefone-edit" value="<?= htmlspecialchars($usuario['telefone'] ?? '') ?>" required style="width: 100%; padding: 8px;">
-                                </div>
-                                <div class="form-group" style="margin-bottom: 15px;">
-                                    <label for="email-edit" style="display: block; margin-bottom: 5px;">E-mail *</label>
-                                    <input type="email" id="email-edit" value="<?= htmlspecialchars($usuario['email'] ?? '') ?>" required style="width: 100%; padding: 8px;">
-                                </div>
-                                
-                                <div class="form-group" style="margin-bottom: 15px; display:none;">
-                                    <label for="nasc-edit" style="display: block; margin-bottom: 5px;">Data de Nascimento *</label>
-                                    <input type="text" id="nasc-edit" value="" style="width: 100%; padding: 8px;">
-                                </div>
-
-                                <button type="submit" class="btn-primary" style="background: #000; color: #fff; border: 0; padding: 10px 15px; cursor: pointer; border-radius: 8px;">Salvar Alterações</button>
-                                <button type="button" id="btn-cancelar-edicao" style="background: none; border: 1px solid #ccc; padding: 10px 15px; cursor: pointer; border-radius: 8px;">Cancelar</button>
-                            </form>
-                        </div>
-                    </div>
-            </div>
+                        <button type="submit" class="btn-primary" style="background: #000; color: #fff; border: 0; padding: 10px 15px; cursor: pointer; border-radius: 8px;">Salvar Alterações</button>
+                        <button type="button" id="btn-cancelar-edicao" style="background: none; border: 1px solid #ccc; padding: 10px 15px; cursor: pointer; border-radius: 8px;">Cancelar</button>
+                    </form>
+                </div>
+                
+                </div>
             
             <div id="meus-pedidos" class="tab-content">
                 <h3>MEUS PEDIDOS</h3>
