@@ -4,20 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Elegancia Store</title>
-    <link rel="stylesheet" href="<?= BASE_URL ?>/css/global/cabecalho.css">
-    <link rel="stylesheet" href="<?= BASE_URL ?>/css/sidecart.css">
     <style>
         body { background-color: #f4f4f4; font-family: Arial, sans-serif; }
         .login-container {
             max-width: 400px;
-            margin: 60px auto;
+            margin: 100px auto; /* Aumentei a margem do topo */
             background: #fff;
             padding: 30px;
             border-radius: 12px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
             text-align: center;
         }
-        .login-container h1 { font-size: 24px; margin-bottom: 20px; }
+        /* Adicionei o H1 da logo aqui */
+        .login-logo {
+            font-size: 32px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 25px;
+            letter-spacing: 1px;
+        }
+        .login-container h2 { font-size: 24px; margin-bottom: 20px; font-weight: 600; }
         .form-group { margin-bottom: 20px; text-align: left; }
         .form-group label { display: block; margin-bottom: 8px; font-weight: 500; }
         .form-group input {
@@ -25,7 +31,7 @@
             padding: 12px 15px;
             border: 1px solid #ddd;
             border-radius: 8px;
-            box-sizing: border-box; /* Garante que o padding não afete a largura */
+            box-sizing: border-box; 
         }
         .btn {
             width: 100%;
@@ -55,15 +61,14 @@
             padding: 10px;
             border-radius: 8px;
             margin-bottom: 15px;
-            display: none; /* Começa oculto */
+            display: none; 
         }
     </style>
 </head>
 <body>
-    <?php include __DIR__ . '/components/cabecalho.php'; ?>
-
     <main class="login-container">
-        <h1>Acessar Minha Conta</h1>
+        <div class="login-logo">ELEGANCIA</div>
+        <h2>Acessar Minha Conta</h2>
         
         <div id="error-message" class="error-message"></div>
 
@@ -81,9 +86,6 @@
             <a href="<?= BASE_URL ?>/registrar" class="btn btn-secondary">Não tenho conta</a>
         </form>
     </main>
-
-    <div id="sidecart-overlay" class="sidecart-overlay"></div>
-    <div id="sidecart" class="sidecart"></div>
 
     <script>
         const baseURL = "<?= BASE_URL ?>";
@@ -110,8 +112,8 @@
                 const result = await response.json();
 
                 if (response.ok) {
-                    // Sucesso! Redireciona para o perfil ou página principal
-                    window.location.href = `${baseURL}/perfil`;
+                    // SUCESSO! Redireciona para a HOME (produtos)
+                    window.location.href = `${baseURL}/home`;
                 } else {
                     // Erro
                     throw new Error(result.erro || "Falha no login");
@@ -125,6 +127,5 @@
             }
         });
     </script>
-    <script src="<?= BASE_URL ?>/js/sidecart.js"></script>
-</body>
+    </body>
 </html>

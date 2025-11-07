@@ -65,7 +65,7 @@ class Usuario {
             $stmtCliente->execute([
                 ':nome' => $dados['nome'],
                 ':email' => $dados['email'],
-                ':senha' => $hashSenha,
+                ':senha' => $hashSenha, // Salva a senha HASHED
                 ':celular' => $dados['celular'],
                 ':cpf' => $dados['cpf']
             ]);
@@ -73,10 +73,9 @@ class Usuario {
             // 5. Pegar o ID do cliente recém-criado
             $idCliente = $conn->lastInsertId();
 
-            // 6. Inserir na tabela 'enderecos' (CONSULTA CORRIGIDA)
-            $end = $dados['endereco']; // Apenas para encurtar
+            // 6. Inserir na tabela 'enderecos' (usando sua estrutura com 'logradouro')
+            $end = $dados['endereco']; 
             
-            // Query corrigida para bater com a sua tabela: logradouro, complemento, etc.
             $sqlEndereco = "INSERT INTO enderecos (id_cliente, logradouro, numero, complemento, bairro, cidade, estado, cep)
                             VALUES (:id, :logradouro, :numero, :complemento, :bairro, :cidade, :estado, :cep)";
             
@@ -85,7 +84,7 @@ class Usuario {
                 ':id'          => $idCliente,
                 ':logradouro'  => $end['logradouro'],
                 ':numero'      => $end['numero'],
-                ':complemento' => $end['complemento'], // Campo adicionado
+                ':complemento' => $end['complemento'],
                 ':bairro'      => $end['bairro'],
                 ':cidade'      => $end['cidade'],
                 ':estado'      => $end['estado'],
@@ -105,7 +104,7 @@ class Usuario {
         } catch (Exception $e) {
             // 9. Se algo deu errado, desfaz tudo
             $conn->rollBack();
-            // error_log($e->getMessage()); // É bom logar o erro real
+            error_log($e->getMessage()); // É bom logar o erro real
             throw new Exception("Erro ao finalizar o cadastro no banco de dados.");
         }
     }

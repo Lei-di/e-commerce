@@ -25,13 +25,13 @@ if (session_status() == PHP_SESSION_NONE) {
 </style>
 <section class="cabecalho">
     <div class="logo">
-        <a href="<?= BASE_URL ?>/">ELEGANCIA</a>
+        <a href="<?= BASE_URL ?>/home">ELEGANCIA</a>
     </div>
     <ul>
-        <li><a href="<?= BASE_URL ?>/?categoria=novidades" class="category-link" data-category="novidades"><h4>Novidades</h4></a></li>
-        <li><a href="<?= BASE_URL ?>/?categoria=feminino" class="category-link" data-category="feminino"><h4>Feminino</h4></a></li>
-        <li><a href="<?= BASE_URL ?>/?categoria=masculino" class="category-link" data-category="masculino"><h4>Masculino</h4></a></li>
-        <li><a href="<?= BASE_URL ?>/?categoria=calçados" class="category-link" data-category="calçados"><h4>Calçados</h4></a></li>
+        <li><a href="<?= BASE_URL ?>/home?categoria=novidades" class="category-link" data-category="novidades"><h4>Novidades</h4></a></li>
+        <li><a href="<?= BASE_URL ?>/home?categoria=feminino" class="category-link" data-category="feminino"><h4>Feminino</h4></a></li>
+        <li><a href="<?= BASE_URL ?>/home?categoria=masculino" class="category-link" data-category="masculino"><h4>Masculino</h4></a></li>
+        <li><a href="<?= BASE_URL ?>/home?categoria=calçados" class="category-link" data-category="calçados"><h4>Calçados</h4></a></li>
     </ul>
     <div class="pesquisa">
         <img src="<?= BASE_URL ?>/assets/icones/lupa.png" alt="Ícone de busca">
@@ -50,7 +50,7 @@ if (session_status() == PHP_SESSION_NONE) {
             <a href="<?= BASE_URL ?>/logout" class="link-sair">Sair</a>
         
         <?php else: ?>
-            <a href="<?= BASE_URL ?>/login" title="Fazer Login">
+            <a href="<?= BASE_URL ?>/" title="Fazer Login">
                 <img id="usuario" src="<?= BASE_URL ?>/assets/icones/perfil.png" alt="Ícone de perfil">
             </a>
         <?php endif; ?>

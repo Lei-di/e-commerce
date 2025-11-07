@@ -6,13 +6,13 @@ class LoginPageController {
             session_start();
         }
         
-        // Se o usuário já está logado, manda ele para o perfil
+        // Se o usuário JÁ ESTÁ LOGADO, manda ele para a /home (loja)
         if (isset($_SESSION['usuario_id'])) {
-            header('Location: ' . BASE_URL . '/perfil');
+            header('Location: ' . BASE_URL . '/home'); // Modificado de /perfil para /home
             exit;
         }
         
-        // Se não, mostra a página de login
+        // Se não está logado, mostra a página de login
         require_once __DIR__ . '/../../views/login.php';
     }
 }

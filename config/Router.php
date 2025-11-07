@@ -4,8 +4,8 @@ require_once __DIR__ . '/../controllers/web/HomeController.php';
 require_once __DIR__ . '/../controllers/web/PerfilController.php';
 require_once __DIR__ . '/../controllers/web/CheckoutController.php';
 require_once __DIR__ . '/../controllers/web/PedidoConfirmadoController.php';
-require_once __DIR__ . '/../controllers/web/LoginPageController.php'; // <-- ADICIONADO
-require_once __DIR__ . '/../controllers/web/RegistroController.php'; // <-- ADICIONADO
+require_once __DIR__ . '/../controllers/web/LoginPageController.php'; 
+require_once __DIR__ . '/../controllers/web/RegistroController.php'; 
 
 // Controllers que respondem à API (JSON)
 require_once __DIR__ . '/../controllers/LoginController.php';
@@ -19,10 +19,17 @@ class Router {
         $method = $_SERVER['REQUEST_METHOD'];
 
         switch (true) {
-            // Rotas para carregar Views 
+            // --- ROTAS MODIFICADAS ---
+            // A raiz (/) agora aponta para o Login
             case $path === '/':
+                (new LoginPageController())->index();
+                break;
+
+            // A página principal (produtos) agora é /home
+            case $path === '/home':
                 (new HomeController())->index();
                 break;
+            // --- FIM DAS MODIFICAÇÕES ---
 
             case $path === '/perfil':
                 (new PerfilController())->index();
@@ -36,27 +43,24 @@ class Router {
                 (new PedidoConfirmadoController())->index();
                 break;
             
-            // --- NOVAS ROTAS DE AUTENTICAÇÃO (VIEWS) ---
-            case $path === '/login': // <-- ADICIONADO
-                (new LoginPageController())->index();
+            case $path === '/login': 
+                // Redireciona /login para / (evitar duplicidade)
+                header('Location: ' . BASE_URL . '/');
+                exit;
                 break;
 
-            case $path === '/registrar': // <-- ADICIONADO
+            case $path === '/registrar': 
                 (new RegistroController())->index();
                 break;
 
-            case $path === '/logout': // <-- ADICIONADO
+            case $path === '/logout': 
                 (new LoginController())->logout();
                 break;
-            // --- FIM DAS NOVAS ROTAS ---
 
-            // Rotas de API
+            // Rotas de API (sempre começam com /api/)
             case $method === 'POST' && $path === '/api/login':
                 (new LoginController())->login();
                 break;
-            
-            // (O restante das suas rotas de API /api/carrinho/*, /api/produtos/*, etc.)
-            // ...
 
             case $path === '/api/carrinho/adicionar':
                 (new CarrinhoController())->adicionar();
@@ -122,7 +126,7 @@ class Router {
                 (new ProdutoController())->buscarPorPreco($min, $max);
                 break;
 
-            case $method === 'POST' && $path === '/api/usuario/cadastrar': // <-- JÁ EXISTIA, AGORA FUNCIONA
+            case $method === 'POST' && $path === '/api/usuario/cadastrar':
                 (new UsuarioController())->registrar();
                 break;
 

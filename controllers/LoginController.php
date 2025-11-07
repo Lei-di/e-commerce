@@ -4,10 +4,9 @@ require_once __DIR__ . '/../models/Usuario.php';
 
 class LoginController extends Controller {
     
-    // Esta função não existe, mas o Router chama
+    // Redireciona para a página de login real (raiz)
     public function index() {
-        // Redireciona para a página de login real
-        header('Location: ' . BASE_URL . '/login');
+        header('Location: ' . BASE_URL . '/');
         exit;
     }
 
@@ -27,7 +26,6 @@ class LoginController extends Controller {
 
         if ($usuario) {
             // Salva o ID do cliente na sessão
-            // O seu SQL da tabela clientes mostra 'id_cliente'
             $_SESSION['usuario_id'] = $usuario['id_cliente']; 
             $_SESSION['usuario_nome'] = $usuario['nome'];
             
@@ -55,7 +53,7 @@ class LoginController extends Controller {
         session_unset(); // Limpa as variáveis da sessão
         session_destroy(); // Destroi a sessão
         
-        // Redireciona para a página principal
+        // Redireciona para a página principal (login)
         header('Location: ' . BASE_URL . '/');
         exit;
     }
