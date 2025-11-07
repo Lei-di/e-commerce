@@ -82,16 +82,10 @@
 
         <div id="tamanho-modal-overlay" class="tamanho-modal-overlay"></div>
         <div id="tamanho-modal" class="tamanho-modal">
-            <h3>Selecione o Tamanho</h3>
+            <h3 id="tamanho-modal-titulo">Selecione</h3>
             <button id="btn-cancelar-tamanho" class="btn-cancelar-tamanho">&times;</button>
             <div id="tamanho-modal-opcoes" class="tamanho-opcoes">
-                <label><input type="radio" name="tamanho_modal" value="PP"> PP</label>
-                <label><input type="radio" name="tamanho_modal" value="P"> P</label>
-                <label><input type="radio" name="tamanho_modal" value="M"> M</label>
-                <label><input type="radio" name="tamanho_modal" value="G"> G</label>
-                <label><input type="radio" name="tamanho_modal" value="GG"> GG</label>
-                <label><input type="radio" name="tamanho_modal" value="XG"> XG</label>
-            </div>
+                </div>
             <button id="btn-confirmar-tamanho" class="btn-confirmar-tamanho">Confirmar</button>
         </div>
         <div id="sidecart-overlay" class="sidecart-overlay"></div>

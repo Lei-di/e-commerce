@@ -3,12 +3,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const categoryLinks = document.querySelectorAll(".category-link");
   const areaProduto = document.querySelector('.area-produto');
   
-  // --- INÍCIO: Seletores do Modal de Tamanho ---
+  // --- INÍCIO: Seletores do Modal de Tamanho (Atualizado) ---
   const modalOverlay = document.getElementById("tamanho-modal-overlay");
   const modal = document.getElementById("tamanho-modal");
+  const modalTitulo = document.getElementById("tamanho-modal-titulo"); // Novo seletor
+  const modalOpcoes = document.getElementById("tamanho-modal-opcoes");
   const btnConfirmarTamanho = document.getElementById("btn-confirmar-tamanho");
   const btnCancelarTamanho = document.getElementById("btn-cancelar-tamanho");
-  const modalOpcoes = document.getElementById("tamanho-modal-opcoes");
   // --- FIM: Seletores do Modal ---
 
   function scrollToProdutos() {
@@ -17,14 +18,45 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // --- Funções do Modal de Tamanho ---
-  function openTamanhoModal(produtoId) {
-      // Armazena o ID do produto no próprio modal
+  // --- Funções do Modal de Tamanho (Atualizadas) ---
+
+  /**
+   * Abre o modal e popula com as opções corretas (roupa ou calçado)
+   * @param {string} produtoId - O ID do produto
+   * @param {string} categoria - A categoria do produto (ex: 'Feminino', 'Calçados')
+   */
+  function openTamanhoModal(produtoId, categoria) {
+      // Armazena o ID e a categoria no modal
       modal.dataset.produtoId = produtoId;
+      modal.dataset.categoria = categoria; // Armazena a categoria
       
-      // Limpa seleções anteriores
-      const radios = modalOpcoes.querySelectorAll('input[name="tamanho_modal"]');
-      radios.forEach(radio => radio.checked = false);
+      let optionsHtml = '';
+      
+      // Limpa opções anteriores
+      modalOpcoes.innerHTML = '';
+
+      if (categoria === 'Feminino' || categoria === 'Masculino') {
+          modalTitulo.textContent = "Selecione o Tamanho";
+          const tamanhosRoupa = ['PP', 'P', 'M', 'G', 'GG', 'XG'];
+          
+          optionsHtml = tamanhosRoupa.map(t => 
+              `<label><input type="radio" name="tamanho_modal" value="${t}"> ${t}</label>`
+          ).join('');
+
+      } else if (categoria === 'Calçados') {
+          modalTitulo.textContent = "Selecione a Numeração";
+          const numerosCalcado = [];
+          for (let i = 34; i <= 44; i++) {
+              numerosCalcado.push(i.toString());
+          }
+
+          optionsHtml = numerosCalcado.map(n => 
+              `<label><input type="radio" name="tamanho_modal" value="${n}"> ${n}</label>`
+          ).join('');
+      }
+      
+      // Insere as opções geradas no modal
+      modalOpcoes.innerHTML = optionsHtml;
 
       // Mostra o modal e o overlay
       modalOverlay.classList.add("open");
@@ -34,24 +66,30 @@ document.addEventListener("DOMContentLoaded", () => {
   function closeTamanhoModal() {
       modalOverlay.classList.remove("open");
       modal.classList.remove("open");
-      // Limpa o ID do produto
+      // Limpa os dados do modal
       delete modal.dataset.produtoId;
+      delete modal.dataset.categoria;
   }
 
-  // Evento de clique no botão CONFIRMAR do modal
+  // Evento de clique no botão CONFIRMAR do modal (Atualizado)
   if (btnConfirmarTamanho) {
     btnConfirmarTamanho.addEventListener("click", () => {
         const produtoId = modal.dataset.produtoId;
+        const categoria = modal.dataset.categoria; // Pega a categoria
         const selectedRadio = modalOpcoes.querySelector('input[name="tamanho_modal"]:checked');
         
         if (!selectedRadio) {
-            alert("Por favor, selecione um tamanho.");
+            // Alerta dinâmico
+            const alertMsg = (categoria === 'Calçados') 
+                ? "Por favor, selecione uma numeração." 
+                : "Por favor, selecione um tamanho.";
+            alert(alertMsg);
             return;
         }
 
-        const tamanho = selectedRadio.value;
+        const tamanho = selectedRadio.value; // 'M' ou '39', etc.
 
-        // Chama a API do carrinho com o tamanho
+        // Chama a API do carrinho com o tamanho/numeração
         if (typeof window.apiAdicionarAoCarrinho === 'function') {
             window.apiAdicionarAoCarrinho(produtoId, tamanho);
             closeTamanhoModal(); // Fecha o modal após confirmar
@@ -81,7 +119,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // --- Lógica de Filtros (Corrigida) ---
+  // --- Lógica de Filtros (sem alterações) ---
   const btnAplicarFiltros = document.getElementById("btn-aplicar-filtros");
   const tituloH1 = document.querySelector('.area-produto h1');
   if (btnAplicarFiltros) {
@@ -164,14 +202,14 @@ document.addEventListener("DOMContentLoaded", () => {
             const produtoId = button.dataset.idProduto;
             const produtoDiv = button.closest('.produto'); // Pega o card pai
             
-            // --- INÍCIO DA NOVA LÓGICA DO MODAL ---
+            // --- INÍCIO DA NOVA LÓGICA DO MODAL (Atualizada) ---
             const categoria = produtoDiv.dataset.categoria;
 
-            // Se for Feminino ou Masculino, abre o modal
-            if (categoria === 'Feminino' || categoria === 'Masculino') {
-                openTamanhoModal(produtoId);
+            // Se for Feminino, Masculino OU Calçados, abre o modal
+            if (categoria === 'Feminino' || categoria === 'Masculino' || categoria === 'Calçados') {
+                openTamanhoModal(produtoId, categoria); // Passa a categoria
             } else {
-                // Para outras categorias (Calçados, etc.), adiciona direto
+                // Para outras categorias (Acessórios, etc.), adiciona direto
                 if (typeof window.apiAdicionarAoCarrinho === 'function') {
                     window.apiAdicionarAoCarrinho(produtoId, null); // Envia 'null' como tamanho
                 } else {
@@ -186,7 +224,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // --- FIM DA FUNÇÃO MODIFICADA ---
 
 
-  // --- FUNÇÃO DE FILTRAGEM (sem alterações na lógica interna) ---
+  // --- FUNÇÃO DE FILTRAGEM (sem alterações) ---
   async function filtrarProdutos(params = {}) {
     let url = ""; 
     if (!tituloH1) {
@@ -255,10 +293,20 @@ document.addEventListener("DOMContentLoaded", () => {
       filtrarProdutos({ busca: termoBusca });
       scrollToProdutos();
   } else {
-      filtrarProdutos({ categoria: categoriaInicial });
+      // Adiciona os listeners aos botões já na carga inicial
+      addEventListenersToBuyButtons();
+
+      // (A lógica de filtragem inicial foi movida para o backend, 
+      // mas se precisar de filtro inicial via JS, descomente a linha abaixo)
+      // filtrarProdutos({ categoria: categoriaInicial }); 
+
       if (categoriaInicial && categoriaInicial !== 'novidades') {
         scrollToProdutos();
       }
   }
+  
+  // Garante que os botões dos produtos carregados inicialmente (via PHP) 
+  // também tenham os listeners
+  addEventListenersToBuyButtons();
 
 }); // Fim do DOMContentLoaded
