@@ -47,7 +47,7 @@ try {
 
 // 4. Testar filtros por categoria
 echo "<h3>4. Testar Filtros por Categoria:</h3>";
-$categorias_teste = ['feminino', 'masculino', 'acessorios', 'novidades'];
+$categorias_teste = ['feminino', 'masculino', 'calçados', 'novidades'];
 
 foreach ($categorias_teste as $cat) {
     try {
