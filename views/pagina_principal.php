@@ -43,8 +43,8 @@
                 </div>
                 <h4>Faixa de preço</h4><br>
                 <article class="preco">
-                    <label><input type="number" name="minimo" value="" placeholder="Min.."></label>
-                    <label><input type="number" name="maximo" value="" placeholder="Max.."></label>
+                    <label><input type="number" name="minimo" value="" placeholder="Min.." min="0"></label>
+                    <label><input type="number" name="maximo" value="" placeholder="Max.." ></label>
                 </article>
 
                 <h4>Tamanhos</h4><br>

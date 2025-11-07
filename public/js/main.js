@@ -32,31 +32,76 @@ document.addEventListener("DOMContentLoaded", () => {
       btnAplicarFiltros.addEventListener("click", () => {
           // 1. Coletar dados dos filtros da sidebar
           
-          // Preço
-          const minPreco = document.querySelector(".filtro .preco input[name='minimo']").value;
-          const maxPreco = document.querySelector(".filtro .preco input[name='maximo']").value;
+          // --- INÍCIO DA ATUALIZAÇÃO ---
+          // Seleciona os inputs
+          let minPrecoInput = document.querySelector(".filtro .preco input[name='minimo']");
+          let maxPrecoInput = document.querySelector(".filtro .preco input[name='maximo']");
+          
+          let minPreco = minPrecoInput.value;
+          let maxPreco = maxPrecoInput.value;
 
-          // Categorias (Pega o valor do *primeiro* checkbox de categoria marcado)
-          // Nota: A API atual só suporta uma categoria por vez.
+          // NOVO: Verificação de valores negativos
+          // Se for negativo, define como "0" e atualiza o campo
+          if (parseFloat(minPreco) < 0) {
+              minPreco = "0";
+              minPrecoInput.value = "0"; 
+          }
+          if (parseFloat(maxPreco) < 0) {
+              maxPreco = "0";
+              maxPrecoInput.value = "0";
+          }
+          // --- FIM DA VERIFICAÇÃO DE NEGATIVOS ---
+          // --- FIM DA ATUALIZAÇÃO ---
+
+
+          // Categorias
           const categoriaCheckbox = document.querySelector(".filtro .opcoes input[type='checkbox']:checked");
-          const categoria = categoriaCheckbox ? categoriaCheckbox.id : null; // 'vestidos', 'blusas', etc.
+          const categoria = categoriaCheckbox ? categoriaCheckbox.id : null; // 'feminino', 'masculino', etc.
 
           // 2. Definir os parâmetros para a função filtrarProdutos
           let params = {};
 
-          if (minPreco && maxPreco) {
+          // --- INÍCIO DA ATUALIZAÇÃO LÓGICA ---
+          // Verifica se *pelo menos um* dos campos de preço foi preenchido
+          if (minPreco || maxPreco) { 
+              
+              // Define padrões se um dos campos estiver vazio
+              if (minPreco === "") {
+                  minPreco = "0"; // Preço mínimo padrão
+              }
+              if (maxPreco === "") {
+                  maxPreco = "999999"; // Preço máximo padrão (um valor bem alto)
+              }
+
+              // --- NOVO: Garantir que min não seja maior que max ---
+              // Converte para número para comparar corretamente
+              let minVal = parseFloat(minPreco);
+              let maxVal = parseFloat(maxPreco);
+
+              if (minVal > maxVal) {
+                  // Se min for maior que max, inverte os valores
+                  let temp = minPreco;
+                  minPreco = maxPreco;
+                  maxPreco = temp;
+                  
+                  // Atualiza os campos de input visualmente
+                  minPrecoInput.value = minPreco;
+                  maxPrecoInput.value = maxPreco;
+              }
+              // --- FIM DA GARANTIA ---
+
               // Prioridade 1: Filtro por preço (ignora o resto, pois a API não combina)
               params.preco = `${minPreco}-${maxPreco}`;
               if(tituloH1) tituloH1.textContent = `Preço entre R$${minPreco} e R$${maxPreco}`;
-
+          
           } else if (categoria) {
               // Prioridade 2: Filtro por categoria
               params.categoria = categoria;
-              // (O título será atualizado dentro de filtrarProdutos)
           } else {
               // Se nada for selecionado, apenas recarrega as novidades (todos)
               params.categoria = 'novidades';
           }
+          // --- FIM DA ATUALIZAÇÃO LÓGICA ---
 
           // 3. Chamar a função de filtro existente
           filtrarProdutos(params);
@@ -127,7 +172,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // --- FIM DA NOVA FUNÇÃO --- // <-- ADICIONADO -->
 
 
-  // --- FUNÇÃO MODIFICADA ---
+  // --- FUNÇÃO MODIFICAÇÃO ---
   async function filtrarProdutos(params = {}) {
     let url = `${baseURL}/api/produtos`;
     
